@@ -1,9 +1,10 @@
 ---
+import Icon from './Icon.astro';
 import { ctfLog } from '../data/competitions';
 import { profile } from '../data/profile';
 ---
 <section class="ctf-section" id="ctf" aria-labelledby="ctf-title"><div class="wrap">
-  <header class="section-heading"><div><p class="eyebrow">Competing as Awdyane</p><h2 id="ctf-title">Shared effort.<br /><em>Real results.</em></h2></div><p class="section-note">Team achievements, with the team named.<br />My main team is MDN_1CH94N.</p></header>
-  {ctfLog.map(group=><><p class="eyebrow ctf-year">{group.year}</p><ol class="ctf-results">{group.entries.map(e=><li id={e.id}><div><h3>{e.event}</h3><span class="team-name">{e.team}</span></div><strong class="ctf-result">{e.result}</strong><p>{e.detail}{e.url&&<> <a href={e.url}>Scoreboard ↗</a></>}</p></li>)}</ol></>)}
-  <a class="text-link" href={profile.ctftime}>CTFtime profile <span aria-hidden="true">↗</span></a>
+  <header class="section-heading"><div><h2 id="ctf-title">CTF team results.</h2></div><p class="section-note">Team achievements, with the team named.<br />I compete as Awdyane; my main team is MDN_1CH94N.</p></header>
+  {ctfLog.map(group=><><p class="eyebrow ctf-year">{group.year}</p><ol class="ctf-results">{group.entries.map(e=><li id={e.id}><div><h3>{e.event}</h3><span class="team-name">{e.team}</span></div><strong class="ctf-result">{e.result}</strong><p>{e.detail}{e.url&&<> <a href={e.url}>Scoreboard</a></>}</p></li>)}</ol></>)}
+  <a class="text-link" href={profile.ctftime}>CTFtime profile <span aria-hidden="true"><Icon name="external" /></span></a>
 </div></section>

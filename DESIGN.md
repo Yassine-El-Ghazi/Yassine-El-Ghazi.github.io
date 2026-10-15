@@ -1,59 +1,54 @@
-# Annotated Binary
+# Annotated Binary — dark theme
 
-The portfolio reads like an annotated technical study: a clear explanation beside the artifact that supports it. Its opening pairs Yassine El Ghazi's name and research focus with a real compiled routine. Project sections continue that relationship through implementation notes, diagrams, evaluation details, and explicit limitations.
+A cybersecurity portfolio built around a readable analysis artifact: the visitor selects a real basic block and follows its instructions into an explanation. Project evidence continues that relationship through an APK data path, network topology, scoped evaluation and team-attributed results.
 
-## Visual system
+## Direction and composition
+
+The surface is a graphite analysis folio. Pale mineral blue means action or selection; ivory is the primary reading voice. The signature is the compiled-example graph, not decorative terminal chrome or random code. Actual project names carry the case-study headings. Labels communicate candidate identity, project scope or figure data; repeated decorative kickers are omitted.
+
+The desktop hero pairs the name with the interactive graph. A named featured-case link gives recruiters immediate access to real work. At 850px and below, the figure follows the introduction. A 1320px maximum container, responsive gutters and safe-area insets keep the grid aligned. Project layouts follow their material rather than repeating identical cards. A separate charcoal competition band groups team results.
+
+## Color roles
 
 | Token | Value | Role |
 |---|---|---|
-| `--paper` | `#f1efe6` | Main page ground |
-| `--ink` | `#20221e` | Primary text, strong rules, competition-log ground |
-| `--accent` | `#a33327` | Brick-red annotations, selected graph block, links and focus |
-| `--muted` | `#5d6259` | Supporting prose and technical metadata |
-| `--line` | `#bfc2b4` | Figure, table, and section divisions |
-| `--wash` | `#e7e7d9` | Diagram surfaces |
+| `--canvas` | `#14171b` | Main ground and selected-node text |
+| `--foreground` | `#eef0ed` | Primary prose and display type |
+| `--accent` | `#9dcbd5` | Action, focus, selected block and incident edges |
+| `--muted` | `#abb6be` | Supporting explanation and metadata |
+| `--line` | `#3e4a54` | Nonessential dividers |
+| `--line-strong` | `#74858f` | Graph boundaries, edges and strong separators |
+| `--wash` | `#1c2228` | Elevated technical figures and competition surface |
 
-The dark competition band reverses the paper/ink relationship and uses lighter supporting colors. Hairline rules group related evidence. Borders around graph nodes and network endpoints describe actual structures. Section layouts follow their content: an annotated figure, a topology, a result log, or a reading list.
+Native browser surfaces use `color-scheme: dark`; theme metadata matches the canvas. Selection, focus, tap highlight and scrollbar colors belong to the same system. The legacy `--paper`/`--ink` aliases map to canvas/foreground for shared technical components; they do not imply an inverted light palette. Graph nodes use dark text on the blue selected fill.
 
-| Typeface | Use |
-|---|---|
-| Source Serif 4 | Name, headings, figure titles, and selected numeric annotations; italic provides a second voice within the same family |
-| Geist | Body text, navigation, controls, and project explanations |
-| Geist Mono | Assembly, addresses, code, compact labels, and technical metadata |
+## Typography
 
-Fonts are variable WOFF2 assets served from the site through Fontsource packages. The shared layout owns their imports and preload hints. Body copy starts at 16px with a 1.65 line height; compact figure text is smaller. Display type uses fluid sizes, close tracking, and optical alignment. Test actual names, labels, and instructions at narrow widths before changing the type scale.
+Source Serif 4 provides the name and headings; Geist carries reading and navigation; Geist Mono is reserved for assembly, addresses and technical measurements. All are self-hosted WOFF2. The name uses roman type, while restrained italic annotation distinguishes the figure's reading voice. Tracking never goes tighter than -.04em. Body copy starts at 16px with a 1.65 line height. Compact labels stay at least 12px; explanations and project text use readable measures.
 
-## Composition
+The three faces serve distinct jobs. Do not add another family or use monospace to make ordinary prose look technical. Preserve real text and allow zoom, wrapping and selection.
 
-`global.css` owns the shared tokens, typography, navigation, homepage sections, and breakpoints. Content sits in a container capped at 1320px with 24px side gutters, reduced to 20px on small phones. The desktop hero places the name and introduction beside the binary figure. At 850px and below, the figure follows the introduction; project and supporting sections also become single-column compositions. The sticky header moves its navigation to a second row.
+## Authentic binary exhibit
 
-The project narrative begins with the Android scanner, followed by the FortiGate topology, SOC work, and Linux configuration. Native disclosure elements expose evaluation and validation detail without interrupting the main reading path. Research, CTF results, tools, education, and contact information complete the page. Writeups reuse the document shell and add `writeup.css` plus purpose-built technical components.
+`BinaryExhibit.astro` renders `hero-sample.json`, generated from `scripts/hero-sample/sample.c` with GCC -O1 and binutils. The safe portfolio-authored hash/compare routine has 58 bytes, 20 instructions, five blocks and six edges. Neither the generator nor the website executes the compiled program. The figure is an educational example, not a claim of malware research.
 
-## The binary exhibit
+Native buttons select blocks and update pressed state, incident edges, pseudocode and explanation. Native disclosures reveal compiled instructions. Text describes the complete connectivity; a polite status announces user selections. Instruction fields contain real text separators. Without JavaScript, all five annotations and instruction disclosures remain accessible.
 
-`BinaryExhibit.astro` renders the committed `hero-sample.json` data. Its source is `scripts/hero-sample/sample.c`, a short, non-malicious hash-and-compare routine authored for the portfolio. The generator compiles with GCC `-O1` and extracts disassembly and ELF metadata with binutils. The current fixture contains 58 function bytes, five basic blocks, and six edges, including the loop back edge. The compiled program is not executed by the generator or the website.
+Inactive enhanced readings share a grid cell and retain layout space while hidden from view and assistive technology. This keeps the default card height stable. Selecting another block closes inactive disclosures. The graph's geometry and commentary must be reviewed whenever the fixture changes.
 
-Graph nodes are native buttons. Selecting a node updates its pressed state, highlights incident edges, and displays a matching pseudocode translation and plain-language explanation. Native disclosures reveal the actual instructions. The loop block is selected initially. A polite live region announces user selections, and keyboard focus stays on the selected button. Decorative SVG edges are hidden from assistive technology; branch conditions remain visible as text.
+## Interaction and quality rules
 
-All five readings are present in the generated HTML. Only after the script initializes does the enhanced view hide inactive readings from view and assistive technology while reserving their layout space, so a visitor without JavaScript can read the complete explanation. The graph is an authored visualization of this particular fixture: its node placement, edge paths, and commentary must be reviewed whenever compiler output changes.
+- Keep the specimen still at rest. No idle animation: state changes answer a visitor's selection, and the site needs no loader, autoplay, smooth-scroll library or WebGL.
+- Use one family of authored SVG arrows, visible keyboard focus and clear hover/pressed feedback. Native links, buttons and disclosures retain their browser behavior.
+- Respect reduced motion. All primary content remains present; inactive graph annotations stay selectable just as in normal motion mode.
+- Keep the two small inline enhancements within the 4.8KB combined audit limit. Do not introduce a client framework for static content.
+- Retain canonical/social metadata, sitemap rules, accessible tables, custom 404 and the research publishing shell. Keep source and generated assets within the publication/privacy policy.
+- Verify production builds at 320, 390, 768, 1024, 1440 and 1920px, then exercise keyboard, touch, reduced motion, no-JavaScript reading and secondary routes. Automated findings require contextual review; screenshots and real behavior remain necessary.
 
-## Performance and accessibility
+## Skill workflow
 
-- Keep content and evidence in static HTML. The two small inline enhancements handle section navigation and graph selection; no animation library, canvas renderer, or client framework is required.
-- Serve fonts locally, preload only critical faces, and inspect the font requests when changing weights or subsets. The social card is a generated image, not a runtime rendering task.
-- Use real headings, landmarks, links, buttons, disclosure controls, table headers, and captions. Preserve the skip link, visible focus styles, and sticky-header anchor offsets.
-- Keep explanations available to keyboard and touch visitors. Essential content must not depend on hover, color alone, or motion.
-- Reduced-motion preferences disable smooth scrolling and transitions. Keep the page readable in its static state and avoid adding entrance effects that conceal content.
-- Check the production build at phone and desktop widths, including graph labels, long links, keyboard focus, disclosures, and social metadata. Treat automated link, type, accessibility, and performance checks as evidence alongside visual review.
+The dark refinement uses locally installed Codex-compatible skills: Anthropic Frontend Design, UI UX Pro Max, Impeccable, Vercel Web Design Guidelines and the Awwwards skill. UI UX Pro Max's search tools, Impeccable's context/detector tooling, and Awwwards' production audit/browser helpers support the design and independent reviews. These authoring tools are outside the portfolio runtime and are not bundled into the site.
 
-`Layout.astro` supplies the canonical URL, page metadata, self-hosted fonts, skip link, and navigation enhancement. `scripts/og-image.mjs` composes the social card from the built exhibit's actual graph and the shared visual system.
+The brief takes precedence over incompatible recommendations: preserve Astro, factual evidence and the security gates; keep dark mode deliberate; avoid generic project grids, unnecessary motion libraries, stock assets and fabricated achievements. Search results are recommendations, not authority to replace the user's direction.
 
-## Consulted design references
-
-These repositories were consulted as design prose and implementation references. No third-party skill was installed, and no skill installer, hook, binary, or helper script was executed for this design.
-
-- [Anthropic frontend-design](https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md): subject-led direction, deliberate typography, restrained motion, and critique against generic defaults.
-- [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill): accessibility, responsive layout, and Astro implementation guidance.
-- [Impeccable](https://github.com/pbakaus/impeccable): visual hierarchy, typography, craft checks, and preserving factual content through a redesign.
-- [Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines/blob/main/command.md): semantic controls, focus, reduced motion, image sizing, and interface review.
-- [Awwwards skill](https://github.com/juliobsz/skills/tree/main/awwwards): a concept anchored in the subject, consistency across pages, and production-browser review. Its motion engine and dependencies are not part of this site.
+References: [Anthropic](https://github.com/anthropics/skills/tree/main/skills/frontend-design), [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), [Impeccable](https://github.com/pbakaus/impeccable), [Vercel](https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines), [Awwwards](https://github.com/juliobsz/skills/tree/main/awwwards).

@@ -1,10 +1,12 @@
 ---
-interface Props { name?: 'arrow' | 'github' | 'download' | 'external'; class?: string; }
+interface Props { name?: 'arrow' | 'github' | 'down' | 'up' | 'turn' | 'external'; class?: string; }
 const { name = 'arrow', class: className } = Astro.props;
 ---
 <svg class={className} viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
   {name === 'arrow' && <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />}
   {name === 'external' && <path d="M7 17 17 7M8 7h9v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />}
-  {name === 'download' && <path d="M12 4v11m-5-5 5 5 5-5M5 19h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />}
+  {name === 'down' && <path d="M12 4v16m-6-6 6 6 6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />}
+  {name === 'up' && <path d="M12 20V4m-6 6 6-6 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />}
+  {name === 'turn' && <path d="M5 4v12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />}
   {name === 'github' && <path d="M9 19c-4 1-4-2-6-2m12 5v-4a3.5 3.5 0 0 0-1-3c3-.4 6-1.5 6-6a4.7 4.7 0 0 0-1.3-3.3A4.4 4.4 0 0 0 18.6 2S17.4 1.6 15 3a11.5 11.5 0 0 0-6 0C6.6 1.6 5.4 2 5.4 2a4.4 4.4 0 0 0-.1 3.7A4.7 4.7 0 0 0 4 9c0 4.5 3 5.6 6 6a3.5 3.5 0 0 0-1 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />}
 </svg>

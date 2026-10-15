@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { profile } from '../data/profile';
 const home = Astro.url.pathname === '/';
 const prefix = home ? '' : '/';
@@ -6,8 +7,8 @@ const links = [['work','Projects'],['research','Focus'],['ctf','CTFs'],['about',
 ---
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href={home ? '#top' : '/'} aria-label="Yassine El Ghazi, homepage"><span class="brand-mark" aria-hidden="true">y.</span><span>Yassine<br />El Ghazi</span></a>
+    <a class="brand" translate="no" href={home ? '#top' : '/'}><span class="brand-mark" aria-hidden="true">y.</span><span>Yassine<br /> El Ghazi</span></a>
     <nav class="site-nav" aria-label="Main navigation">{links.map(([id,label]) => <a href={`${prefix}#${id}`} data-section={id}>{label}</a>)}</nav>
-    <a class="header-github" href={profile.github}>GitHub <span aria-hidden="true">↗</span></a>
+    <a class="header-github" href={profile.github}>GitHub <span aria-hidden="true"><Icon name="external" /></span></a>
   </div>
 </header>
