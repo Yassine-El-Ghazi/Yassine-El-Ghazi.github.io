@@ -470,10 +470,10 @@ p { color: var(--muted); }
 
 /* ---------- Analysis-report layout: sticky symbol rail + container-driven columns ----------- */
 .rail-in { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
-.rail-label { display: inline-flex; gap: 8px; color: var(--muted); white-space: nowrap; }
+.rail-label { display: inline-flex; gap: 8px; min-width: 0; color: var(--muted); }
 .rail-label .semi { color: var(--amber); font-weight: 600; }
 .rail-rule { flex: 1; height: 1px; background: repeating-linear-gradient(90deg, var(--line-strong) 0 4px, transparent 4px 8px); }
-.rail-addr { font: 400 12px/1 var(--mono); color: var(--dim); letter-spacing: 0.04em; }
+.rail-addr { flex: none; font: 400 12px/1 var(--mono); color: var(--dim); letter-spacing: 0.04em; }
 .symbols { display: none; }
 .report-main { min-width: 0; container-type: inline-size; }
 .report-main > h2:first-child, .work-head h2 { margin-top: 0; }
@@ -534,3 +534,7 @@ p { color: var(--muted); }
 }
 
 @media (min-width: 900px) { .hero h1 span { display: inline; } }
+
+/* Tables must be able to shrink on very narrow screens (WCAG 1.4.10 reflow at 320px). */
+.vlog { table-layout: fixed; }
+.vlog th, .vlog td { overflow-wrap: anywhere; }

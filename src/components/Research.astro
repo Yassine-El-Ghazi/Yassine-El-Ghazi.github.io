@@ -24,7 +24,7 @@ const symbols = [...areas.map(a => ({ id: a.id, label: a.name })), { id: 'r-writ
           </li>
         ))}
       </ul>
-      <aside class="writeups-note" id="r-writeups" aria-labelledby="writeups-title">
+      <div class="writeups-note" id="r-writeups">
         <div>
           <p class="label">Research / writeups</p>
           <h3 id="writeups-title">Coming as I publish analyses.</h3>
@@ -32,7 +32,7 @@ const symbols = [...areas.map(a => ({ id: a.id, label: a.name })), { id: 'r-writ
         <p>No reversing writeups are published yet. The site is ready for them, and each will carry the material that makes an analysis checkable:</p>
         <ul aria-label="Planned writeup contents"><li>disassembly</li><li>pseudocode</li><li>call graphs</li><li>hexdumps</li><li>strings</li><li>method notes</li></ul>
         <p class="hexline" aria-hidden="true"><span class="hx">00000000</span>  7f 45 4c 46  <span>|.ELF|</span></p>
-      </aside>
+      </div>
     </div>
   </div>
 </section>

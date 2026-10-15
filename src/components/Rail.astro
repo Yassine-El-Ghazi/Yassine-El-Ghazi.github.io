@@ -2,7 +2,7 @@
 interface Props { label: string; addr: string; symbols?: { id: string; label: string }[]; }
 const { label, addr, symbols = [] } = Astro.props;
 ---
-<aside class="rail" aria-label={`${label} section`}>
+<div class="rail">
   <div class="rail-in">
     <p class="rail-label label"><span class="semi" aria-hidden="true">;</span>{label}</p>
     <span class="rail-rule" aria-hidden="true"></span>
@@ -13,4 +13,4 @@ const { label, addr, symbols = [] } = Astro.props;
       </ul>
     )}
   </div>
-</aside>
+</div>
