@@ -1,119 +1,152 @@
 ---
-import { featured, secondary, compact } from '../data/projects';
+import { featured, secondary, compact, scripts } from '../data/projects';
 import { topFeatures, confusion as cm } from '../data/detector';
-import SectionBar from './SectionBar.astro';
+import Rail from './Rail.astro';
 import Icon from './Icon.astro';
 const [forti, soc] = secondary;
 const bits = '10010110001011010100110010111001'.split('');
+const symbols = [
+  { id: 'p-android', label: 'Android Malware Detection' },
+  { id: 'p-forti', label: 'FortiGate VPN & HA Lab' },
+  { id: 'p-soc', label: 'SecureBank SOC Lab' },
+  { id: 'p-rice', label: 'MyHyprlandRice' },
+];
 ---
-<section id="work" class="section wrap" aria-labelledby="work-title">
-  <SectionBar label="Selected work" addr="00401000" />
-  <div class="work-head">
-    <h2 id="work-title">Projects with source and stated limits.</h2>
-    <p class="sec-intro">Public repositories with documentation. The malware detector leads; the network, detection, and systems projects show the engineering around it.</p>
-  </div>
-
-  <article class="proj featured" aria-labelledby="p-android">
-    <div>
-      <p class="label cat">{featured.category}</p>
-      <h3 id="p-android">{featured.name}</h3>
-      <p class="desc">{featured.description}</p>
-      <p class="approach">{featured.approach}</p>
-      <dl class="meta">{featured.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
-      <ul class="tags" aria-label="Technologies">{featured.tags.map(t => <li>{t}</li>)}</ul>
-      <div class="outcome"><span class="label">Outcome</span><p>{featured.outcome}</p></div>
-      <div class="foot"><a class="link" href={featured.url} aria-label={`View on GitHub: ${featured.name}`}>View on GitHub <Icon name="external" /></a></div>
+<section id="work" class="section wrap report" aria-labelledby="work-title">
+  <Rail label="Selected work" addr="00401000" symbols={symbols} />
+  <div class="report-main">
+    <div class="work-head">
+      <h2 id="work-title">Projects with source and stated limits.</h2>
+      <p class="sec-intro">Public repositories with documentation. The malware detector leads; the network, detection, and systems projects show the engineering around it.</p>
     </div>
 
-    <figure class="pipeline">
-      <figcaption class="pl-head"><span class="label">Pipeline</span><span class="label">Static · no execution</span></figcaption>
-      <ol class="pl-steps">
-        <li><div><span class="name">APK</span><span class="desc">Input package, never run</span></div></li>
-        <li><div><span class="name">Manifest parse</span><span class="desc">Androguard · permissions, intent actions</span></div></li>
-        <li><div><span class="name">Feature vector</span><span class="desc">x ∈ {'{0,1}'}<sup>215</sup> · Drebin-215 vocabulary</span>
-          <div class="bits" aria-hidden="true">{bits.map(b => <i class:list={{ on: b === '1' }}></i>)}</div><span class="bits-cap">Illustrative bit pattern</span></div></li>
-        <li><div><span class="name">Random Forest</span><span class="desc">200 trees · feature importances</span></div></li>
-        <li class="end"><div><span class="name">Verdict</span><span class="desc">Confidence · high-risk permission flags</span>
-          <div class="verdicts"><span class="b">BENIGN</span><span class="m">MALICIOUS</span></div></div></li>
-      </ol>
-      <dl class="stats">
-        <div><dt class="label">Accuracy</dt><dd>98.7%</dd></div>
-        <div><dt class="label">ROC-AUC</dt><dd>0.999</dd></div>
-        <div><dt class="label">Apps</dt><dd>15,036</dd></div>
-        <div><dt class="label">Features</dt><dd>215</dd></div>
-      </dl>
-      <p class="stats-note">Drebin-215 benchmark, 20% held-out split, from the project report.</p>
-    </figure>
+    <article class="proj featured" id="p-android" aria-labelledby="t-android">
+      <div>
+        <p class="label cat">{featured.category}</p>
+        <h3 id="t-android">{featured.name}</h3>
+        <p class="desc">{featured.description}</p>
+        <p class="approach">{featured.approach}</p>
+        <dl class="meta">{featured.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
+        <ul class="tags" aria-label="Technologies">{featured.tags.map(t => <li>{t}</li>)}</ul>
+        <div class="outcome"><span class="label">Outcome</span><p>{featured.outcome}</p></div>
+        <div class="foot"><a class="link" href={featured.url} aria-label={`View on GitHub: ${featured.name}`}>View on GitHub <Icon name="external" /></a></div>
+      </div>
 
-    <div class="evidence">
-      <section class="ev-panel" aria-labelledby="ev-feat">
-        <header class="ev-head"><h4 id="ev-feat" class="label">What the model keys on</h4><span class="label">Top 12 of 215 · importance %</span></header>
-        <ol class="featbars">
-          {topFeatures.map(f => (
-            <li>
-              <span class="fname">{f.name}</span>
-              <span class="fbar"><i style={`width:${(f.importance / topFeatures[0].importance) * 100}%`}></i><b>{f.importance.toFixed(1)}</b></span>
-              <span class="prev" role="img" aria-label={`Present in ${f.malware}% of malware apps and ${f.benign}% of benign apps`}><span class="pm"><i style={`width:${f.malware}%`}></i></span><span class="pb"><i style={`width:${f.benign}%`}></i></span><em aria-hidden="true">{f.malware} / {f.benign}</em></span>
-            </li>
-          ))}
+      <figure class="pipeline">
+        <figcaption class="pl-head"><span class="label">Pipeline</span><span class="label">Static · no execution</span></figcaption>
+        <ol class="pl-steps">
+          <li><div><span class="name">APK</span><span class="desc">Input package, never run</span></div></li>
+          <li><div><span class="name">Manifest parse</span><span class="desc">Androguard · permissions, intent actions</span></div></li>
+          <li><div><span class="name">Feature vector</span><span class="desc">x ∈ {'{0,1}'}<sup>215</sup> · Drebin-215 vocabulary</span>
+            <div class="bits" aria-hidden="true">{bits.map(b => <i class:list={{ on: b === '1' }}></i>)}</div><span class="bits-cap">Illustrative bit pattern</span></div></li>
+          <li><div><span class="name">Random Forest</span><span class="desc">200 trees · feature importances</span></div></li>
+          <li class="end"><div><span class="name">Verdict</span><span class="desc">Confidence · high-risk permission flags</span>
+            <div class="verdicts"><span class="b">BENIGN</span><span class="m">MALICIOUS</span></div></div></li>
         </ol>
-        <p class="ev-legend"><span class="k m" aria-hidden="true"></span>share of malware <span class="k b" aria-hidden="true"></span>share of benign apps</p>
-      </section>
-      <section class="ev-panel" aria-labelledby="ev-cm">
-        <header class="ev-head"><h4 id="ev-cm" class="label">Held-out test set</h4><span class="label">{(cm.benign + cm.malicious).toLocaleString('en-US')} apps</span></header>
-        <div class="cm-wrap">
-          <table class="cm">
-            <caption class="sr-only">Confusion matrix of the Random Forest on the held-out test set</caption>
-            <thead><tr><td></td><th scope="col">Predicted benign</th><th scope="col">Predicted malicious</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">Actual benign</th><td class="ok">{cm.tn.toLocaleString('en-US')}</td><td class="bad">{cm.fp}<small>false alarms</small></td></tr>
-              <tr><th scope="row">Actual malicious</th><td class="bad">{cm.fn}<small>missed</small></td><td class="ok m">{cm.tp.toLocaleString('en-US')}</td></tr>
-            </tbody>
+        <dl class="stats">
+          <div><dt class="label">Accuracy</dt><dd>98.7%</dd></div>
+          <div><dt class="label">ROC-AUC</dt><dd>0.999</dd></div>
+          <div><dt class="label">Apps</dt><dd>15,036</dd></div>
+          <div><dt class="label">Features</dt><dd>215</dd></div>
+        </dl>
+        <p class="stats-note">Drebin-215 benchmark, 20% held-out split, from the project report.</p>
+      </figure>
+
+      <div class="evidence">
+        <section class="ev-panel" aria-labelledby="ev-feat">
+          <header class="ev-head"><h4 id="ev-feat" class="label">What the model keys on</h4><span class="label">Top 12 of 215 · importance %</span></header>
+          <ol class="featbars">
+            {topFeatures.map(f => (
+              <li>
+                <span class="fname">{f.name}</span>
+                <span class="fbar"><i style={`width:${(f.importance / topFeatures[0].importance) * 100}%`}></i><b>{f.importance.toFixed(1)}</b></span>
+                <span class="prev" role="img" aria-label={`Present in ${f.malware}% of malware apps and ${f.benign}% of benign apps`}><span class="pm"><i style={`width:${f.malware}%`}></i></span><span class="pb"><i style={`width:${f.benign}%`}></i></span><em aria-hidden="true">{f.malware} / {f.benign}</em></span>
+              </li>
+            ))}
+          </ol>
+          <p class="ev-legend"><span class="k m" aria-hidden="true"></span>share of malware <span class="k b" aria-hidden="true"></span>share of benign apps</p>
+        </section>
+        <section class="ev-panel" aria-labelledby="ev-cm">
+          <header class="ev-head"><h4 id="ev-cm" class="label">Held-out test set</h4><span class="label">{(cm.benign + cm.malicious).toLocaleString('en-US')} apps</span></header>
+          <div class="cm-wrap">
+            <table class="cm">
+              <caption class="sr-only">Confusion matrix of the Random Forest on the held-out test set</caption>
+              <thead><tr><td></td><th scope="col">Predicted benign</th><th scope="col">Predicted malicious</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Actual benign</th><td class="ok">{cm.tn.toLocaleString('en-US')}</td><td class="bad">{cm.fp}<small>false alarms</small></td></tr>
+                <tr><th scope="row">Actual malicious</th><td class="bad">{cm.fn}<small>missed</small></td><td class="ok m">{cm.tp.toLocaleString('en-US')}</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="ev-note">Produced by re-running the repository’s <span class="mono">train.py</span> with its fixed seed. The report quotes 98.74%; the re-run gives 98.77%.</p>
+          <p class="ev-note">Three of the top twelve features are manifest permissions. The rest are code-level features from Drebin, which the scanner’s manifest-only extractor cannot read, so scanner results can differ from these benchmark numbers.</p>
+        </section>
+      </div>
+    </article>
+
+    <div class="secondary">
+      <article class="proj" id="p-forti" aria-labelledby="t-forti">
+        <p class="label cat">{forti.category}</p>
+        <h3 id="t-forti">{forti.name}</h3>
+        <p class="desc">{forti.description}</p>
+        <svg class="topo" viewBox="0 0 320 84" role="img" aria-label="Diagram: an active and a passive FortiGate pair at headquarters, linked for high availability, with an IKEv2 IPsec tunnel from the active unit to a remote FortiGate.">
+          <rect class="box" x="1" y="6" width="84" height="32" rx="5" /><text x="43" y="26" text-anchor="middle">HQ active</text>
+          <rect class="box" x="1" y="46" width="84" height="32" rx="5" /><text x="43" y="66" text-anchor="middle">HQ passive</text>
+          <path d="M85 22 H98 V62 H85" fill="none" stroke="#868d96" stroke-width="1.25" /><text x="105" y="46" style="fill:#868d96">HA</text>
+          <path class="tunnel" d="M85 22 H190 V42 H235" /><text x="110" y="15">IKEv2 / ESP</text>
+          <rect class="box" x="235" y="26" width="84" height="32" rx="5" /><text x="277" y="46" text-anchor="middle">Remote</text>
+        </svg>
+        <dl class="meta">{forti.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
+        {forti.table && (
+          <table class="vlog">
+            <caption class="label">{forti.table.title} · from the {forti.table.source}</caption>
+            <tbody>{forti.table.rows.map(r => <tr><th scope="row">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
           </table>
-        </div>
-        <p class="ev-note">Produced by re-running the repository’s <span class="mono">train.py</span> with its fixed seed. The report quotes 98.74%; the re-run gives 98.77%.</p>
-        <p class="ev-note">Three of the top twelve features are manifest permissions. The rest are code-level features from Drebin, which the scanner’s manifest-only extractor cannot read, so scanner results can differ from these benchmark numbers.</p>
-      </section>
+        )}
+        <div class="outcome"><span class="label">Outcome</span><p>{forti.outcome}</p></div>
+        <div class="foot"><a class="link" href={forti.url} aria-label={`View on GitHub: ${forti.name}`}>View on GitHub <Icon name="external" /></a></div>
+      </article>
+
+      <article class="proj" id="p-soc" aria-labelledby="t-soc">
+        <p class="label cat">{soc.category}</p>
+        <h3 id="t-soc">{soc.name}</h3>
+        <p class="desc">{soc.description}</p>
+        <p class="flowline" aria-label="Log flow: web server logs to Wazuh to Elasticsearch and Kibana"><span>web logs</span><span class="arrow" aria-hidden="true">→</span><span>Wazuh</span><span class="arrow" aria-hidden="true">→</span><span>Elastic / Kibana</span></p>
+        <dl class="meta">{soc.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
+        {soc.table && (
+          <table class="vlog roles">
+            <caption class="label">{soc.table.title} · from the {soc.table.source}</caption>
+            <tbody>{soc.table.rows.map(r => <tr><th scope="row" class="mono">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
+          </table>
+        )}
+        <ul class="scripts" aria-label="Helper scripts in the repository">
+          {scripts.map(s => <li><span class="mono">{s[0]}</span><span>{s[1]}</span></li>)}
+        </ul>
+        <div class="outcome"><span class="label">Outcome</span><p>{soc.outcome}</p></div>
+        <div class="foot"><a class="link" href={soc.url} aria-label={`View on GitHub: ${soc.name}`}>View on GitHub <Icon name="external" /></a></div>
+      </article>
     </div>
-  </article>
 
-  <div class="secondary">
-    <article class="proj" aria-labelledby="p-forti">
-      <p class="label cat">{forti.category}</p>
-      <h3 id="p-forti">{forti.name}</h3>
-      <p class="desc">{forti.description}</p>
-      <svg class="topo" viewBox="0 0 320 84" role="img" aria-label="Diagram: an active and a passive FortiGate pair at headquarters, linked for high availability, with an IKEv2 IPsec tunnel from the active unit to a remote FortiGate.">
-        <rect class="box" x="1" y="6" width="84" height="32" rx="5" /><text x="43" y="26" text-anchor="middle">HQ active</text>
-        <rect class="box" x="1" y="46" width="84" height="32" rx="5" /><text x="43" y="66" text-anchor="middle">HQ passive</text>
-        <path d="M85 22 H98 V62 H85" fill="none" stroke="#868d96" stroke-width="1.25" /><text x="105" y="46" style="fill:#868d96">HA</text>
-        <path class="tunnel" d="M85 22 H190 V42 H235" /><text x="110" y="15">IKEv2 / ESP</text>
-        <rect class="box" x="235" y="26" width="84" height="32" rx="5" /><text x="277" y="46" text-anchor="middle">Remote</text>
-      </svg>
-      <dl class="meta">{forti.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
-      <div class="outcome"><span class="label">Outcome</span><p>{forti.outcome}</p></div>
-      <div class="foot"><a class="link" href={forti.url} aria-label={`View on GitHub: ${forti.name}`}>View on GitHub <Icon name="external" /></a></div>
+    <article class="compact" id="p-rice" aria-labelledby="t-rice">
+      <div>
+        <p class="label cat blue">{compact.category}</p>
+        <h3 id="t-rice">{compact.name}</h3>
+        <p class="desc">{compact.description}</p>
+        <p class="desc">{compact.outcome}</p>
+        <ul class="tags" aria-label="Technologies">{compact.tags.map(t => <li>{t}</li>)}</ul>
+        <a class="link" href={compact.url} aria-label={`View on GitHub: ${compact.name}`}>View on GitHub <Icon name="external" /></a>
+      </div>
+      <div>
+        {compact.table && (
+          <table class="vlog roles">
+            <caption class="label">{compact.table.title} · from the {compact.table.source}</caption>
+            <tbody>{compact.table.rows.map(r => <tr><th scope="row" class="mono">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
+          </table>
+        )}
+        <p class="flowline" aria-label="Update workflow commands"><span class="mono">myhyprctl update-plan</span><span class="arrow" aria-hidden="true">→</span><span class="mono">update</span><span class="arrow" aria-hidden="true">→</span><span class="mono">recover</span></p>
+      </div>
     </article>
 
-    <article class="proj" aria-labelledby="p-soc">
-      <p class="label cat">{soc.category}</p>
-      <h3 id="p-soc">{soc.name}</h3>
-      <p class="desc">{soc.description}</p>
-      <p class="flowline" aria-label="Log flow: web server logs to Wazuh to Elasticsearch and Kibana"><span>web logs</span><span class="arrow" aria-hidden="true">→</span><span>Wazuh</span><span class="arrow" aria-hidden="true">→</span><span>Elastic / Kibana</span></p>
-      <dl class="meta">{soc.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
-      <div class="outcome"><span class="label">Outcome</span><p>{soc.outcome}</p></div>
-      <div class="foot"><a class="link" href={soc.url} aria-label={`View on GitHub: ${soc.name}`}>View on GitHub <Icon name="external" /></a></div>
-    </article>
+    <div class="work-more"><p>A selection of public work. More on GitHub.</p><a class="link" href="https://github.com/Yassine-El-Ghazi?tab=repositories">All repositories <Icon name="external" /></a></div>
   </div>
-
-  <article class="compact" aria-labelledby="p-rice">
-    <div>
-      <p class="label cat blue">{compact.category}</p>
-      <h3 id="p-rice">{compact.name}</h3>
-      <ul class="tags" aria-label="Technologies">{compact.tags.map(t => <li>{t}</li>)}</ul>
-    </div>
-    <div><p class="desc">{compact.description}</p><p class="desc">{compact.outcome}</p></div>
-    <div><dl class="meta">{compact.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl><a class="link" href={compact.url} aria-label={`View on GitHub: ${compact.name}`}>View on GitHub <Icon name="external" /></a></div>
-  </article>
-
-  <div class="work-more"><p>A selection of public work. More on GitHub.</p><a class="link" href="https://github.com/Yassine-El-Ghazi?tab=repositories">All repositories <Icon name="external" /></a></div>
 </section>

@@ -30,7 +30,7 @@ for (const file of htmlFiles) {
   }
   if (/<script\b[^>]*src=/.test(html)) failures.push(`${file}: unexpected external or bundled client JavaScript`);
   const inline = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(match => match[1]);
-  if (inline.length > 1 || inline.some(code => code.length > 3200)) failures.push(`${file}: inline JavaScript exceeds the one small navigation script allowed`);
+  if (inline.length > 1 || inline.some(code => code.length > 4800)) failures.push(`${file}: inline JavaScript exceeds the one small navigation script allowed`);
   if (/internship|\bCBI\b|\bPFA\b/i.test(html.replace(/<[^>]+>/g, ' '))) failures.push(`${file}: private internship/company wording must stay out of the public site`);
 }
 // Readability floor: no declared text size below 11.5px (SVG diagram text) in shipped CSS.

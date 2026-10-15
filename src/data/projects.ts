@@ -11,6 +11,7 @@ export interface Project {
   meta: MetaRow[];
   url: string;
   linkLabel: string;
+  table?: { title: string; source: string; head: [string, string]; rows: [string, string][] };
 }
 
 // Every statement below traces to the linked public repository (README, source, or the project's own report).
@@ -45,6 +46,22 @@ export const secondary: Project[] = [
     outcome:
       'Validated bidirectional traffic, RDP, ESP packet captures, and recovery after HA failover. Investigated a return-path routing issue and documented production-hardening gaps.',
     tags: ['FortiGate', 'EVE-NG', 'Wireshark'],
+    table: {
+      title: 'Validation log',
+      source: 'lab README',
+      head: ['Check', 'Result'],
+      rows: [
+        ['IKEv2/IPsec selector', '1/1 active on both peers'],
+        ['Routing', 'Correct remote subnet routes'],
+        ['ICMP', 'Bidirectional'],
+        ['TCP/3389', 'Reachable'],
+        ['RDP', 'Interactive session established'],
+        ['Packet analysis', 'RDP on LAN, ESP on WAN'],
+        ['Internet access', 'Independent from both sites'],
+        ['HA failover', 'Secondary promoted, traffic recovered'],
+        ['Post-failover VPN', 'Selector and route restored'],
+      ],
+    },
     meta: [
       { label: 'PROTOCOL', value: 'IKEv2 / IPsec' },
       { label: 'SECURITY', value: 'FortiGate HA · active-passive' },
@@ -62,6 +79,15 @@ export const secondary: Project[] = [
     outcome:
       'Built practical experience with log analysis and alerting; wrote helper scripts for service health, investigation, and recovery checks.',
     tags: ['Wazuh', 'Elastic Stack', 'Zabbix', 'Bash'],
+    table: {
+      title: 'Lab roles',
+      source: 'lab README',
+      head: ['Host', 'Runs'],
+      rows: [
+        ['VM-SIEM', 'Elasticsearch, Kibana, Wazuh Manager, Filebeat, Zabbix Server'],
+        ['VM-WEB', 'Apache / DVWA, Wazuh Agent, Zabbix Agent2'],
+      ],
+    },
     meta: [
       { label: 'DETECTION', value: 'Wazuh / Elastic' },
       { label: 'MONITORING', value: 'Zabbix' },
@@ -81,6 +107,17 @@ export const compact: Project = {
   outcome:
     'Engineered repeatable installation, conflict backups, state separation, and CI checks for shell scripts and configuration.',
   tags: ['Linux', 'Bash', 'Lua', 'Quickshell'],
+  table: {
+    title: 'State model',
+    source: 'repository README',
+    head: ['Location', 'Role'],
+    rows: [
+      ['dotfiles/', 'Declarative files, linked individually with GNU Stow'],
+      ['defaults/', 'First-run values copied into mutable files'],
+      ['examples/', 'Safe templates for host-specific overrides'],
+      ['~/.local/state/myhyprlandrice/', 'Conflict backups and reversible migration archives'],
+    ],
+  },
   meta: [
     { label: 'SYSTEM', value: 'Arch / CachyOS' },
     { label: 'CHECKS', value: 'ShellCheck · CI' },
@@ -88,3 +125,10 @@ export const compact: Project = {
   url: 'https://github.com/Yassine-El-Ghazi/myHyprlandRice',
   linkLabel: 'myHyprlandRice',
 };
+
+export const scripts = [
+  ['sb-status', 'SIEM, WEB and forwarded-port health'],
+  ['sb-investigate', 'status, Zabbix checks, recent alerts, autofix logs'],
+  ['sb-run', 'run commands on SIEM or WEB over SSH'],
+  ['securebank-autofix.sh', 'Zabbix action script for automatic recovery'],
+] as const;

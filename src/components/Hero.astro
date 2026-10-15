@@ -1,69 +1,147 @@
 ---
 import { profile } from '../data/profile';
+import sample from '../data/hero-sample.json';
 import Icon from './Icon.astro';
 
-type Tok = { t: 'reg' | 'num' | 'lab' | 'p'; v: string };
-const reg = (v: string): Tok => ({ t: 'reg', v });
-const num = (v: string): Tok => ({ t: 'num', v });
-const p = (v: string): Tok => ({ t: 'p', v });
+// Everything in the workbench is generated from a real compile: see scripts/hero-sample/generate.py.
+type Row = (typeof sample.rows)[number];
+const ROW = 24, PAD = 8, GUT = 52;
+const REG = /^(?:[re]?[abcd]x|[abcd][lh]|[re]?[sd]il?|[re]?[sb]pl?|r(?:8|9|1[0-5])[dwb]?)$/;
+function tokens(r: Row) {
+  if (r.branch) return [{ t: 'lab', v: 'loc_' + r.target }];
+  return r.ops.replace(/,/g, ', ').split(/(,\s*|\[|\]|\+|\s+)/).filter(Boolean).map(p =>
+    REG.test(p) ? { t: 'reg', v: p } : /^0x[0-9a-f]+$|^\d+$/i.test(p) ? { t: 'num', v: p } : { t: 'p', v: p });
+}
+function note(r: Row, i: number) {
+  const b = sample.blocks.find(b => b.first === i);
+  if (!b) return '';
+  const from = r.xrefs.length ? '  ↑ ' + r.xrefs.join(' ') : '';
+  return `; ${b.label}${from}`;
+}
 
-// Decorative interface study. Bytes and branch offsets are valid x86-64 encodings for these
-// addresses, but the routine is illustrative and does not come from any real sample.
-const rows: { addr: string; bytes: string; mn: string; ops: Tok[]; sel?: boolean; note?: string }[] = [
-  { addr: '140001420', bytes: '55', mn: 'push', ops: [reg('rbp')], note: 'prologue' },
-  { addr: '140001421', bytes: '48 89 E5', mn: 'mov', ops: [reg('rbp'), p(', '), reg('rsp')] },
-  { addr: '140001424', bytes: '48 83 EC 20', mn: 'sub', ops: [reg('rsp'), p(', '), num('20h')] },
-  { addr: '140001428', bytes: '8B 45 10', mn: 'mov', ops: [reg('eax'), p(', ['), reg('rbp'), p('+arg_0]')], note: 'stack arg' },
-  { addr: '14000142B', bytes: '83 F8 01', mn: 'cmp', ops: [reg('eax'), p(', '), num('1')] },
-  { addr: '14000142E', bytes: '75 30', mn: 'jne', ops: [{ t: 'lab', v: 'loc_140001460' }], sel: true, note: 'branch' },
+// Jump arrows in the listing gutter: shortest spans take the lowest lane.
+const spans = sample.arrows.map(a => ({ ...a, lo: Math.min(a.from, a.to), hi: Math.max(a.from, a.to) })).sort((a, b) => a.hi - a.lo - (b.hi - b.lo));
+const lanes: { lo: number; hi: number }[][] = [];
+const placed = spans.map(s => {
+  let lane = lanes.findIndex(l => l.every(o => s.hi < o.lo || s.lo > o.hi));
+  if (lane < 0) { lane = lanes.length; lanes.push([]); }
+  lanes[lane].push(s);
+  return { ...s, lane };
+});
+const listH = PAD * 2 + sample.rows.length * ROW;
+const yOf = (i: number) => PAD + i * ROW + ROW / 2;
+const xEdge = GUT - 6;
+const arrowPaths = placed.map(a => {
+  const lx = xEdge - 10 - a.lane * 11;
+  return { d: `M${xEdge} ${yOf(a.from)} H${lx} V${yOf(a.to)} H${xEdge - 5}`, tip: `${xEdge},${yOf(a.to)} ${xEdge - 6},${yOf(a.to) - 3.5} ${xEdge - 6},${yOf(a.to) + 3.5}`, kind: a.kind };
+});
+
+// Control-flow graph layout for this specific sample (5 blocks).
+const N = [{ x: 105, y: 2 }, { x: 10, y: 84 }, { x: 10, y: 166 }, { x: 105, y: 262 }, { x: 205, y: 84 }];
+const W = 150, H = 46;
+const summary = sample.blocks.map(b => {
+  const last = sample.rows[b.last];
+  const n = b.last - b.first + 1;
+  return `${n} insns` + (last.branch || last.ret ? ` · ${last.mn}` : '');
+});
+const cfgEdges = [
+  { k: 'taken', d: 'M215 48 C215 68 280 64 280 84', tip: '280,84', dir: 'down' },
+  { k: 'fall', d: 'M145 48 C145 68 85 64 85 84', tip: '85,84', dir: 'down' },
+  { k: 'fall', d: 'M85 130 V166', tip: '85,166', dir: 'down' },
+  { k: 'loop', d: 'M160 200 C198 202 198 178 166 180', tip: '160,180', dir: 'left' },
+  { k: 'fall', d: 'M85 212 C85 240 150 236 150 262', tip: '150,262', dir: 'down' },
+  { k: 'jump', d: 'M280 130 C280 200 210 220 210 262', tip: '210,262', dir: 'down' },
 ];
+const head = (tip: string, dir: string) => { const [x, y] = tip.split(',').map(Number); return dir === 'left' ? `${x},${y} ${x + 6},${y - 3.5} ${x + 6},${y + 3.5}` : `${x},${y} ${x - 3.5},${y - 6} ${x + 3.5},${y - 6}`; };
+
+const KW = /\b(int|unsigned|const|char|for|return)\b/g;
+const hl = (line: string) => line.trim().startsWith('/*') ? `<i class="cm">${line}</i>` : line.replace(/\b(0x[0-9A-Fa-f]+u?|\d+u?)\b/g, '<i class="nu">$1</i>').replace(KW, '<i class="kw">$1</i>');
+const perms = (f: string) => (f.includes('A') ? 'R' : '-') + (f.includes('W') ? 'W' : '-') + (f.includes('X') ? 'X' : '-');
+const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
 ---
 <div class="hero-shell">
 <section class="hero wrap" aria-labelledby="hero-title">
-  <div class="hero-copy">
-    <ul class="hero-focus label" aria-label="Focus areas">
-      <li>Reverse engineering</li><li>Malware analysis</li><li>Cybersecurity engineering</li>
-    </ul>
-    <h1 id="hero-title">Yassine<br />El Ghazi</h1>
+  <ul class="hero-focus label" aria-label="Focus areas">
+    <li>Reverse engineering</li><li>Malware analysis</li><li>Cybersecurity engineering</li>
+  </ul>
+  <h1 id="hero-title"><span>Yassine</span> <span>El Ghazi</span></h1>
+  <div class="hero-sub">
     <p class="hero-lede">I take software apart to understand how it works.</p>
-    <p class="hero-support">Final-year cybersecurity engineering student at UEMF. I work on reverse engineering, malware analysis, offensive security, and systems and network security.</p>
-    <div class="hero-cta">
-      <a class="btn primary" href="#work">View selected work <Icon class="go" /></a>
-      <div class="hero-links">
-        <a class="btn" href={profile.github}>GitHub <Icon name="external" class="ext" /></a>
-        <a class="btn" href={profile.cv} download>Resume <Icon name="download" /></a>
-        <a class="btn" href={profile.linkedin}>LinkedIn <Icon name="external" class="ext" /></a>
+    <div class="hero-side">
+      <p class="hero-support">Final-year cybersecurity engineering student at UEMF, working on reverse engineering, malware analysis, offensive security, and systems and network security.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#work">View selected work <Icon class="go" /></a>
+        <div class="hero-links">
+          <a class="btn" href={profile.github}>GitHub <Icon name="external" class="ext" /></a>
+          <a class="btn" href={profile.cv} download>Resume <Icon name="download" /></a>
+          <a class="btn" href={profile.linkedin}>LinkedIn <Icon name="external" class="ext" /></a>
+        </div>
       </div>
     </div>
   </div>
 
-  <figure class="study">
-    <div class="study-head" aria-hidden="true">
-      <div><span class="label">Function</span><span class="v">sub_140001420</span></div>
-      <div><span class="label">Address</span><span class="v amber">0x140001420</span></div>
-      <div><span class="label">Arch</span><span class="v">x86-64</span></div>
+  <figure class="wb">
+    <dl class="wb-bar" aria-hidden="true">
+      <div><dt class="label">File</dt><dd>sample · {sample.file.format}</dd></div>
+      <div><dt class="label">Arch</dt><dd>{sample.file.arch}</dd></div>
+      <div><dt class="label">Built with</dt><dd>gcc {gccVer} -O1</dd></div>
+      <div><dt class="label">Function</dt><dd class="amber">{sample.function.name}</dd></div>
+      <div><dt class="label">Size</dt><dd>{sample.function.bytes} bytes @ {sample.function.fileOffset}</dd></div>
+    </dl>
+    <div class="wb-panes" aria-hidden="true">
+      <section class="pane pane-list">
+        <header class="pane-h"><span class="label">Listing</span><span class="label">{sample.rows.length} insns</span></header>
+        <div class="listing-scroll">
+          <div class="rows" style={`height:${listH}px`}>
+            <svg class="gutter" width={GUT} height={listH} viewBox={`0 0 ${GUT} ${listH}`} focusable="false">
+              {arrowPaths.map(a => <><path class={`ar ${a.kind}`} d={a.d} /><polygon class={`ah ${a.kind}`} points={a.tip} /></>)}
+            </svg>
+            <ol class="listing">
+              {sample.rows.map((r, i) => (
+                <li class={`row b${r.block}`} style={`height:${ROW}px`}>
+                  <span class="a">{r.addr}</span><span class="by">{r.bytes}</span>
+                  <span class="asm"><span class={r.branch || r.ret ? 'mn br' : 'mn'}>{r.mn}</span>{tokens(r).map(t => t.t === 'p' ? t.v : <span class={t.t}>{t.v}</span>)}{note(r, i) && <span class="note">{'  ' + note(r, i)}</span>}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="pane pane-graph">
+        <header class="pane-h"><span class="label">Graph</span><span class="label">{sample.blocks.length} blocks · {sample.edges.length} edges</span></header>
+        <div class="cfg">
+          <svg viewBox="0 0 360 316" focusable="false">
+            {cfgEdges.map(e => <><path class={`edge ${e.k}`} d={e.d} pathLength="1" /><polygon class={`eh ${e.k}`} points={head(e.tip, e.dir)} /></>)}
+            {sample.blocks.map((b, i) => (
+              <g class={`node n${i}`}><rect x={N[i].x} y={N[i].y} width={W} height={H} rx="6" /><text class="t1" x={N[i].x + W / 2} y={N[i].y + 19} text-anchor="middle">{b.label}</text><text x={N[i].x + W / 2} y={N[i].y + 36} text-anchor="middle">{summary[i]}</text></g>
+            ))}
+          </svg>
+          <p class="legend"><span class="lg fall"></span>fall-through <span class="lg taken"></span>taken / loop <span class="lg jump"></span>jmp</p>
+        </div>
+      </section>
+
+      <section class="pane pane-info">
+        <div class="sub">
+          <header class="pane-h"><span class="label">Source</span><span class="label">C</span></header>
+          <pre class="src"><code set:html={sample.source.slice(1, 7).map(hl).join('\n')} /></pre>
+        </div>
+        <div class="sub">
+          <header class="pane-h"><span class="label">Sections</span><span class="label">readelf -S</span></header>
+          <table class="secs"><thead><tr><th scope="col">name</th><th scope="col">addr</th><th scope="col">size</th><th scope="col">perm</th></tr></thead><tbody>
+            {sample.sections.map(s => <tr><th scope="row">{s.name}</th><td>{s.addr}</td><td>{s.size}</td><td>{perms(s.flags)}</td></tr>)}
+          </tbody></table>
+        </div>
+        <div class="sub">
+          <header class="pane-h"><span class="label">ELF header</span><span class="label">16 bytes</span></header>
+          <div class="hexline"><span class="hl"><span class="hx">00000000</span>  <span class="magic">{sample.elfHeader.slice(0, 11)}</span> {sample.elfHeader.slice(12, 23)}  |<span class="magic">.ELF</span>....|</span><span class="hl"><span class="hx">00000008</span>  {sample.elfHeader.slice(24)}  |........|</span></div>
+        </div>
+      </section>
     </div>
-    <ol class="listing" aria-hidden="true">
-      {rows.map(r => (
-        <li class:list={{ sel: r.sel }}>
-          <span class="addr">{r.addr}</span><span class="bytes">{r.bytes}</span>
-          <span class="asm"><span class="mn">{r.mn}</span>{r.ops.map(o => o.t === 'p' ? o.v : <span class={o.t}>{o.v}</span>)}{r.note && <span class="note">{'  ; ' + r.note}</span>}</span>
-        </li>
-      ))}
-    </ol>
-    <div class="cfg" aria-hidden="true">
-      <svg viewBox="0 0 320 160" role="presentation" focusable="false">
-        <path class="edge fall" d="M110 50 C110 80 74 78 74 106" />
-        <path class="edge taken" d="M210 50 C210 80 246 78 246 106" />
-        <polygon class="el-fall" points="70,100 78,100 74,107" />
-        <polygon class="el-taken" points="242,100 250,100 246,107" />
-        <g class="node"><rect x="60" y="6" width="200" height="44" rx="6" /><text class="t1" x="160" y="25" text-anchor="middle">sub_140001420</text><text x="160" y="41" text-anchor="middle">cmp eax, 1 · jne</text></g>
-        <g class="node"><rect x="0" y="108" width="148" height="44" rx="6" /><text class="t1" x="74" y="127" text-anchor="middle">loc_140001430</text><text x="74" y="143" text-anchor="middle" fill="#72a7ff" style="fill:#72a7ff">fall-through</text></g>
-        <g class="node n-taken"><rect x="172" y="108" width="148" height="44" rx="6" /><text class="t1" x="246" y="127" text-anchor="middle">loc_140001460</text><text x="246" y="143" text-anchor="middle" style="fill:#74c7b8">jne taken</text></g>
-      </svg>
-    </div>
-    <figcaption><span class="label">Interface study</span><span class="label">Illustrative, not from a real sample</span>
-      <span class="sr-only">Decorative illustration of an x86-64 function disassembly with a conditional branch and a small control-flow graph. It is not taken from any real binary or malware sample.</span>
+    <figcaption>
+      <span class="label">Real output, not a real sample</span>
+      <span>A short C routine written for this page (a djb2-style hash check), compiled with gcc and disassembled with objdump. Bytes, addresses, blocks and edges come straight from the build; see <span class="mono">scripts/hero-sample</span>. It is not malware and not from any of my projects.</span>
+      <span class="sr-only">Decorative workbench showing the real disassembly of a small compiled C function, its control-flow graph, source, ELF section table and header bytes.</span>
     </figcaption>
   </figure>
 </section>

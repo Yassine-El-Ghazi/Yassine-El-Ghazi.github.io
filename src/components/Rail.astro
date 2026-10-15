@@ -1,0 +1,16 @@
+---
+interface Props { label: string; addr: string; symbols?: { id: string; label: string }[]; }
+const { label, addr, symbols = [] } = Astro.props;
+---
+<aside class="rail" aria-label={`${label} section`}>
+  <div class="rail-in">
+    <p class="rail-label label"><span class="semi" aria-hidden="true">;</span>{label}</p>
+    <span class="rail-rule" aria-hidden="true"></span>
+    <p class="rail-addr" aria-hidden="true">{addr}</p>
+    {symbols.length > 0 && (
+      <ul class="symbols" aria-label="Jump to">
+        {symbols.map(s => <li><a href={`#${s.id}`} data-sym={s.id}><span class="f" aria-hidden="true">f</span>{s.label}</a></li>)}
+      </ul>
+    )}
+  </div>
+</aside>

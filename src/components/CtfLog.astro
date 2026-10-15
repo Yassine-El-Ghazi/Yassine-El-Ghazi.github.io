@@ -1,32 +1,36 @@
 ---
 import { ctfLog } from '../data/competitions';
 import { profile } from '../data/profile';
-import SectionBar from './SectionBar.astro';
+import Rail from './Rail.astro';
 import Icon from './Icon.astro';
+const ids = ['c-csaw', 'c-northsec', 'c-htb'];
+const symbols = [{ id: 'c-csaw', label: 'CSAW CTF' }, { id: 'c-northsec', label: 'NorthSec CTF' }, { id: 'c-htb', label: 'HTB Cyber Apocalypse' }];
 ---
-<section id="ctf" class="section wrap" aria-labelledby="ctf-title">
-  <SectionBar label="CTF operation log" addr="00401040" />
-  <h2 id="ctf-title">Competition record.</h2>
-  <p class="sec-intro">Team results, recorded as they happened. Rankings that change by season and individual scores are left out.</p>
-  {ctfLog.map(group => (
-    <>
-      <p class="label log-year">{group.year}</p>
-      <ol class="log">
-        {group.entries.map((e, i) => (
-          <li class:list={['log-item', { lead: i === 0 }]}>
-            <div><h3>{e.event}</h3><p class="log-result">{e.result}</p></div>
-            <p class="log-team"><span class="label">Team</span><b>{e.team}</b></p>
-            <div>
-              <p class="log-detail">{e.detail}{e.url && <> <a href={e.url}>CTFtime</a></>}</p>
-              {e.rank && (() => { const pct = (e.rank.pos / e.rank.total) * 100; return (
-                <div class="track" role="img" aria-label={`Rank ${e.rank.pos} of ${e.rank.total.toLocaleString('en-US')} teams, top ${pct.toFixed(1)} percent`}>
-                  <span>1</span><span class="line"><i style={`width:${pct}%`}></i><b style={`left:${pct}%`}></b></span><span>{e.rank.total.toLocaleString('en-US')}</span><em>top {pct.toFixed(1)}%</em>
-                </div>); })()}
-            </div>
-          </li>
-        ))}
-      </ol>
-    </>
-  ))}
-  <div class="log-foot"><p>Competing as Awdyane. Team results are shared effort.</p><a class="link" href={profile.ctftime}>CTFtime profile <Icon name="external" /></a></div>
+<section id="ctf" class="section wrap report" aria-labelledby="ctf-title">
+  <Rail label="CTF operation log" addr="00401040" symbols={symbols} />
+  <div class="report-main">
+    <h2 id="ctf-title">Competition record.</h2>
+    <p class="sec-intro">Team results, recorded as they happened. Rankings that change by season and individual scores are left out.</p>
+    {ctfLog.map(group => (
+      <>
+        <p class="label log-year">{group.year}</p>
+        <ol class="log">
+          {group.entries.map((e, i) => (
+            <li id={ids[i]} class:list={['log-item', { lead: i === 0 }]}>
+              <div><h3>{e.event}</h3><p class="log-result">{e.result}</p></div>
+              <p class="log-team"><span class="label">Team</span><b>{e.team}</b></p>
+              <div>
+                <p class="log-detail">{e.detail}{e.url && <> <a href={e.url}>CTFtime</a></>}</p>
+                {e.rank && (() => { const pct = (e.rank.pos / e.rank.total) * 100; return (
+                  <div class="track" role="img" aria-label={`Rank ${e.rank.pos} of ${e.rank.total.toLocaleString('en-US')} teams, top ${pct.toFixed(1)} percent`}>
+                    <span>1</span><span class="line"><i style={`width:${pct}%`}></i><b style={`left:${pct}%`}></b></span><span>{e.rank.total.toLocaleString('en-US')}</span><em>top {pct.toFixed(1)}%</em>
+                  </div>); })()}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </>
+    ))}
+    <div class="log-foot"><p>Competing as Awdyane. Team results are shared effort.</p><a class="link" href={profile.ctftime}>CTFtime profile <Icon name="external" /></a></div>
+  </div>
 </section>

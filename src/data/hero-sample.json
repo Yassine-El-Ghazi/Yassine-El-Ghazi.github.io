@@ -1,0 +1,407 @@
+{
+ "file": {
+  "format": "ELF64",
+  "arch": "x86-64",
+  "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "flags": "-O1 -fno-pie -no-pie -fcf-protection=none -fno-asynchronous-unwind-tables",
+  "entry": "0x401020"
+ },
+ "function": {
+  "symbol": "verify",
+  "name": "sub_401106",
+  "start": "401106",
+  "bytes": 58,
+  "fileOffset": "0x1106"
+ },
+ "rows": [
+  {
+   "addr": "401106",
+   "bytes": "85 F6",
+   "mn": "test",
+   "ops": "esi,esi",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 2,
+   "block": 0,
+   "xrefs": []
+  },
+  {
+   "addr": "401108",
+   "bytes": "7E 2F",
+   "mn": "jle",
+   "ops": "401139",
+   "branch": true,
+   "cond": true,
+   "ret": false,
+   "target": "401139",
+   "size": 2,
+   "block": 0,
+   "xrefs": []
+  },
+  {
+   "addr": "40110a",
+   "bytes": "48 89 FA",
+   "mn": "mov",
+   "ops": "rdx,rdi",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 1,
+   "xrefs": []
+  },
+  {
+   "addr": "40110d",
+   "bytes": "48 63 F6",
+   "mn": "movsxd",
+   "ops": "rsi,esi",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 1,
+   "xrefs": []
+  },
+  {
+   "addr": "401110",
+   "bytes": "48 01 F7",
+   "mn": "add",
+   "ops": "rdi,rsi",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 1,
+   "xrefs": []
+  },
+  {
+   "addr": "401113",
+   "bytes": "B8 05 15 00 00",
+   "mn": "mov",
+   "ops": "eax,0x1505",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 5,
+   "block": 1,
+   "xrefs": []
+  },
+  {
+   "addr": "401118",
+   "bytes": "89 C1",
+   "mn": "mov",
+   "ops": "ecx,eax",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 2,
+   "block": 2,
+   "xrefs": [
+    "40112b"
+   ]
+  },
+  {
+   "addr": "40111a",
+   "bytes": "C1 E1 05",
+   "mn": "shl",
+   "ops": "ecx,0x5",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 2,
+   "xrefs": []
+  },
+  {
+   "addr": "40111d",
+   "bytes": "01 C8",
+   "mn": "add",
+   "ops": "eax,ecx",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 2,
+   "block": 2,
+   "xrefs": []
+  },
+  {
+   "addr": "40111f",
+   "bytes": "0F B6 0A",
+   "mn": "movzx",
+   "ops": "ecx,BYTE PTR [rdx]",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 2,
+   "xrefs": []
+  },
+  {
+   "addr": "401122",
+   "bytes": "31 C8",
+   "mn": "xor",
+   "ops": "eax,ecx",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 2,
+   "block": 2,
+   "xrefs": []
+  },
+  {
+   "addr": "401124",
+   "bytes": "48 83 C2 01",
+   "mn": "add",
+   "ops": "rdx,0x1",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 4,
+   "block": 2,
+   "xrefs": []
+  },
+  {
+   "addr": "401128",
+   "bytes": "48 39 FA",
+   "mn": "cmp",
+   "ops": "rdx,rdi",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 2,
+   "xrefs": []
+  },
+  {
+   "addr": "40112b",
+   "bytes": "75 EB",
+   "mn": "jne",
+   "ops": "401118",
+   "branch": true,
+   "cond": true,
+   "ret": false,
+   "target": "401118",
+   "size": 2,
+   "block": 2,
+   "xrefs": []
+  },
+  {
+   "addr": "40112d",
+   "bytes": "3D EE FF C0 00",
+   "mn": "cmp",
+   "ops": "eax,0xc0ffee",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 5,
+   "block": 3,
+   "xrefs": [
+    "40113e"
+   ]
+  },
+  {
+   "addr": "401132",
+   "bytes": "0F 94 C0",
+   "mn": "sete",
+   "ops": "al",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 3,
+   "xrefs": []
+  },
+  {
+   "addr": "401135",
+   "bytes": "0F B6 C0",
+   "mn": "movzx",
+   "ops": "eax,al",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 3,
+   "block": 3,
+   "xrefs": []
+  },
+  {
+   "addr": "401138",
+   "bytes": "C3",
+   "mn": "ret",
+   "ops": "",
+   "branch": false,
+   "cond": false,
+   "ret": true,
+   "target": null,
+   "size": 1,
+   "block": 3,
+   "xrefs": []
+  },
+  {
+   "addr": "401139",
+   "bytes": "B8 05 15 00 00",
+   "mn": "mov",
+   "ops": "eax,0x1505",
+   "branch": false,
+   "cond": false,
+   "ret": false,
+   "target": null,
+   "size": 5,
+   "block": 4,
+   "xrefs": [
+    "401108"
+   ]
+  },
+  {
+   "addr": "40113e",
+   "bytes": "EB ED",
+   "mn": "jmp",
+   "ops": "40112d",
+   "branch": true,
+   "cond": false,
+   "ret": false,
+   "target": "40112d",
+   "size": 2,
+   "block": 4,
+   "xrefs": []
+  }
+ ],
+ "blocks": [
+  {
+   "id": 0,
+   "label": "sub_401106",
+   "start": "401106",
+   "first": 0,
+   "last": 1
+  },
+  {
+   "id": 1,
+   "label": "loc_40110a",
+   "start": "40110a",
+   "first": 2,
+   "last": 5
+  },
+  {
+   "id": 2,
+   "label": "loc_401118",
+   "start": "401118",
+   "first": 6,
+   "last": 13
+  },
+  {
+   "id": 3,
+   "label": "loc_40112d",
+   "start": "40112d",
+   "first": 14,
+   "last": 17
+  },
+  {
+   "id": 4,
+   "label": "loc_401139",
+   "start": "401139",
+   "first": 18,
+   "last": 19
+  }
+ ],
+ "edges": [
+  {
+   "from": 0,
+   "to": 4,
+   "kind": "taken"
+  },
+  {
+   "from": 0,
+   "to": 1,
+   "kind": "fall"
+  },
+  {
+   "from": 1,
+   "to": 2,
+   "kind": "fall"
+  },
+  {
+   "from": 2,
+   "to": 2,
+   "kind": "loop"
+  },
+  {
+   "from": 2,
+   "to": 3,
+   "kind": "fall"
+  },
+  {
+   "from": 4,
+   "to": 3,
+   "kind": "jump"
+  }
+ ],
+ "arrows": [
+  {
+   "from": 1,
+   "to": 18,
+   "kind": "cond"
+  },
+  {
+   "from": 13,
+   "to": 6,
+   "kind": "cond"
+  },
+  {
+   "from": 19,
+   "to": 14,
+   "kind": "jump"
+  }
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "addr": "401020",
+   "size": "12e",
+   "flags": "AX"
+  },
+  {
+   "name": ".rodata",
+   "addr": "402000",
+   "size": "4",
+   "flags": "AM"
+  },
+  {
+   "name": ".data",
+   "addr": "404000",
+   "size": "10",
+   "flags": "WA"
+  },
+  {
+   "name": ".bss",
+   "addr": "404010",
+   "size": "8",
+   "flags": "WA"
+  }
+ ],
+ "elfHeader": "7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00",
+ "source": [
+  "/* A short routine written for this portfolio, compiled to produce a real disassembly. */",
+  "int verify(const unsigned char *buf, int len) {",
+  "    unsigned h = 5381;",
+  "    for (int i = 0; i < len; i++)",
+  "        h = h * 33 ^ buf[i];",
+  "    return h == 0xC0FFEEu;",
+  "}",
+  "int main(int argc, char **argv) { return verify((const unsigned char *)argv[0], argc); }"
+ ]
+}

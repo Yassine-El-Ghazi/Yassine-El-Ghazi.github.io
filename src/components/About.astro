@@ -1,17 +1,19 @@
 ---
-import SectionBar from './SectionBar.astro';
+import Rail from './Rail.astro';
 ---
-<section id="about" class="section wrap" aria-labelledby="about-title">
-  <SectionBar label="About" />
-  <div class="about-grid">
-    <h2 id="about-title">Curious about what software actually does.</h2>
-    <div class="about-copy">
-      <p>I’m a final-year cybersecurity engineering student at UEMF, increasingly focused on how software behaves internally: <strong>binary behavior, reverse engineering, malware analysis, and vulnerability research</strong>.</p>
-      <p>That sits on a practical base of network security, offensive security, detection, Linux systems, and CTFs, where I compete as Awdyane. I’d rather read the artifact than trust the description of it.</p>
-      <dl class="meta about-meta">
-        <dt>EDUCATION</dt><dd>Engineering in Cybersecurity, EIDIA · UEMF, Fès</dd>
-        <dt>GRADUATION</dt><dd>Expected 2027</dd>
-      </dl>
+<section id="about" class="section wrap report" aria-labelledby="about-title">
+  <Rail label="About" addr="00401080" />
+  <div class="report-main">
+    <div class="about-grid">
+      <h2 id="about-title">Curious about what software actually does.</h2>
+      <div class="about-copy">
+        <p>I’m a final-year cybersecurity engineering student at UEMF, increasingly focused on how software behaves internally: <strong>binary behavior, reverse engineering, malware analysis, and vulnerability research</strong>.</p>
+        <p>That sits on a practical base of network security, offensive security, detection, Linux systems, and CTFs, where I compete as Awdyane. I’d rather read the artifact than trust the description of it.</p>
+        <dl class="meta about-meta">
+          <dt>EDUCATION</dt><dd>Engineering in Cybersecurity, EIDIA · UEMF, Fès</dd>
+          <dt>GRADUATION</dt><dd>Expected 2027</dd>
+        </dl>
+      </div>
     </div>
   </div>
 </section>
