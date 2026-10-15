@@ -1,25 +1,13 @@
 ---
 import { profile } from '../data/profile';
-import Icon from './Icon.astro';
 const home = Astro.url.pathname === '/';
-const base = home ? '' : '/';
-const items = [
-  { id: 'work', label: 'Work' },
-  { id: 'research', label: 'Research' },
-  { id: 'ctf', label: 'CTF' },
-  { id: 'about', label: 'About' },
-  { id: 'contact', label: 'Contact' },
-];
+const prefix = home ? '' : '/';
+const links = [['work','Projects'],['research','Focus'],['ctf','CTFs'],['about','About'],['contact','Contact']];
 ---
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href={home ? '#top' : '/'}><span class="brand-mark" aria-hidden="true">YE</span><span>Yassine El Ghazi<span class="sr-only">, back to top</span></span></a>
-    <nav class="site-nav" aria-label="Main navigation">
-      {items.map(item => <a href={`${base}#${item.id}`} data-section={item.id}>{item.label}</a>)}
-    </nav>
-    <div class="header-actions">
-      <a href={profile.github} aria-label="Yassine El Ghazi on GitHub"><Icon name="github" /><span>GitHub</span></a>
-    </div>
+    <a class="brand" href={home ? '#top' : '/'} aria-label="Yassine El Ghazi, homepage"><span class="brand-mark" aria-hidden="true">y.</span><span>Yassine<br />El Ghazi</span></a>
+    <nav class="site-nav" aria-label="Main navigation">{links.map(([id,label]) => <a href={`${prefix}#${id}`} data-section={id}>{label}</a>)}</nav>
+    <a class="header-github" href={profile.github}>GitHub <span aria-hidden="true">↗</span></a>
   </div>
-  <div class="navband" aria-hidden="true"></div>
 </header>

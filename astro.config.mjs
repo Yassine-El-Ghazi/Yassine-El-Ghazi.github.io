@@ -9,6 +9,6 @@ const hasWriteups = existsSync(writeupsDir) && readdirSync(writeupsDir).some(f =
 export default defineConfig({
   site: 'https://yassine-el-ghazi.github.io',
   output: 'static',
-  markdown: { shikiConfig: { theme: 'github-dark-default', wrap: false } },
+  markdown: { shikiConfig: { theme: 'github-light', wrap: false } },
   integrations: [sitemap({ filter: page => hasWriteups || !page.includes('/writeups') })],
 });
