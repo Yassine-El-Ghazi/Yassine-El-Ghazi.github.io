@@ -3,7 +3,7 @@ import { readFile, readdir, lstat, mkdtemp, writeFile, rm } from 'node:fs/promis
 import { tmpdir } from 'node:os';
 import { resolve, relative, join, extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { scanText, pathFindings, documentApproved } from './privacy-rules.mjs';
+import { scanText, pathFindings, documentApproved, documentUiFindings } from './privacy-rules.mjs';
 
 const git = args => execFileSync('git', args, { maxBuffer: 64 * 1024 * 1024 });
 const policy = JSON.parse(await readFile(new URL('../publication-policy.json', import.meta.url), 'utf8'));
@@ -61,7 +61,8 @@ export async function audit({ history = false, dist = false } = {}) {
     for (const commit of commits) {
       findings.push(...scanText(git(['show','-s','--format=%B',commit]).toString(),'commit-message'));
       for (const entry of git(['ls-tree','-rz',commit]).toString().split('\0').filter(Boolean)) {
-        const [meta,path] = entry.split('\t');
+        const separator = entry.indexOf('\t');
+        const meta = entry.slice(0,separator), path = entry.slice(separator+1);
         const [mode,type,oid] = meta.split(' ');
         const identity = oid + ':' + path;
         if (seen.has(identity)) continue;
@@ -89,7 +90,7 @@ export async function audit({ history = false, dist = false } = {}) {
       findings.push(...await inspectBytes(await readFile(file),path,{deployed:true}));
       if (/\.html$/i.test(path)) {
         const html = await readFile(file,'utf8');
-        if (/\b(?:href|src)\s*=\s*["'][^"']*(?:\.pdf|resume|curriculum|(?:^|[-/])cv(?:[-/.]|$))/i.test(html) || /\b(?:resume|résumé|curriculum vitae)\b/i.test(html.replace(/<[^>]+>/g,' '))) findings.push({rule:'removed-document-ui',path,line:0});
+        findings.push(...documentUiFindings(html,path));
       }
       examined++;
     }

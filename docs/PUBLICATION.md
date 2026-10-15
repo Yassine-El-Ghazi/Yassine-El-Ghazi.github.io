@@ -11,6 +11,8 @@ Every technical claim should be supported by linked public source code, a reprod
 
 The privacy scanner checks all tracked source, working changes and generated assets. The history check visits every reachable commit tree, including unchanged files and binary metadata. Gitleaks checks all reachable history and an isolated snapshot of the Git index, using upstream detection rules without broad exclusions. Scanner logs contain only paths, line numbers and rule IDs, never matched values. Any finding requires review; scanners are safeguards, not proof that disclosure is impossible.
 
+Gitleaks suppression files are prohibited in both the working tree and the index. Inline suppression comments are ignored by the scanner. Do not add baselines or allowlists to conceal findings; investigate and remove the underlying disclosure instead.
+
 Install ExifTool and Poppler (`pdftotext`, `pdfinfo`) for binary inspection. Install Gitleaks **8.30.1** from its official release; CI verifies the Linux archive SHA-256 before extraction. Update the version and checksum together after reviewing upstream releases.
 
 ## Documents and media

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { scanText, pathFindings, documentApproved } from './privacy-rules.mjs';
+import { scanText, pathFindings, documentApproved, documentUiFindings } from './privacy-rules.mjs';
 
 // Values are assembled synthetic fixtures, never working credentials.
 const repeated = 'Ab9xZ7qM2vL6rT8nP4sK'.repeat(4);
@@ -13,6 +13,7 @@ const cases = [
   ['ai-key', 'AI' + 'za' + repeated.slice(0, 35)],
   ['aws-key', 'AK' + 'IA' + 'Z7X2Q9M4N8P6R3T5'],
   ['cloudflare', 'CLOUDFLARE_API_TOKEN=' + repeated.slice(0,40)],
+  ['cloudflare', 'cloudflare_api_token=' + repeated.slice(0,40)],
   ['supabase', 'sb_' + 'secret_' + repeated],
   ['payment-key', 'sk_' + 'live_' + repeated],
   ['payment-key', 'wh' + 'sec_' + repeated],
@@ -29,7 +30,10 @@ const cases = [
   ['credential-assignment', JSON.stringify({ password: repeated })],
   ['credential-assignment', 'api_key: ' + repeated],
   ['credential-assignment', 'const token = "' + repeated + '"'],
+  ['credential-assignment', 'password: ' + repeated.slice(0,8)],
   ['private-path', '/' + 'home/private-user/Documents/item'],
+  ['private-path', '/' + ['run','media','example','data','personal'].join('/')],
+  ['private-path', '/' + ['mnt','data','personal'].join('/')],
 ];
 for (const [rule, content] of cases) test(`detect ${rule}: fixture ${cases.indexOf(cases.find(c=>c[1]===content))}`, () => {
   const findings = scanText(content, 'fixture.txt');
@@ -45,8 +49,9 @@ for (const text of [
   'password: "example-not-a-real-secret"',
   '2026-10-15 commit 0123456789abcdef',
   'const key = "ArrowDown";',
+  'tests/projects/workspace/packages/*',
 ]) test(`allow public/non-secret example ${text.slice(0,22)}`, () => assert.deepEqual(scanText(text,'example.md'), []));
-for (const path of ['PROGRESS.md','docs/CONTENT.md','public/Yassine-El-Ghazi-CV.pdf','.env','.env.production','public/.env.example','notes.bak','backup/dump.sql','db.sqlite','id_rsa','public/private.pem','output/recovery.bundle','public/temp.txt','public/unexpected.pdf','public/resume.txt']) {
+for (const path of ['PROGRESS.md','docs/CONTENT.md','public/Yassine-El-Ghazi-CV.pdf','.env','.env.production','public/.env.example','notes.bak','backup/dump.sql','db.sqlite','id_rsa','public/private.pem','output/recovery.bundle','public/temp.txt','public/unexpected.pdf','public/resume.txt','notes.md','docs/internal-notes.md','docs/superpowers/plans/change.md','.npmrc','.netrc','credentials.json']) {
   test(`block path ${path}`, () => assert.ok(pathFindings(path).length));
 }
 for (const path of ['src/data/profile.ts','docs/WRITEUPS.md','.github/workflows/deploy.yml','tests/example.test.mjs','.env.example','public/favicon.svg']) {
@@ -61,4 +66,10 @@ test('future documents require exact path, hash and review note', () => {
 });
 test('prohibited PDF cannot be approved under a deployment-relative path', () => {
   assert.ok(pathFindings('Yassine-El-Ghazi-CV.pdf',{deployed:true,approvedDocument:true}).length);
+  assert.ok(pathFindings('public/person-cv.pdf',{approvedDocument:true}).length);
+});
+test('CV link labels are blocked even when the URL hides the document type', () => {
+  assert.ok(documentUiFindings('<a href="https://example.invalid/download">Download CV</a>','index.html').length);
+  assert.deepEqual(documentUiFindings('<a href="https://example.invalid/source">Source code</a>','index.html'),[]);
+  assert.deepEqual(documentUiFindings('<a href="/reviewed-analysis.pdf">Public analysis</a>','index.html'),[]);
 });
