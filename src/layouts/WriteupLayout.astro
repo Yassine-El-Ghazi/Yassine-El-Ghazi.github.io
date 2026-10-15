@@ -1,0 +1,26 @@
+---
+import Layout from './Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MetaTable from '../components/writeup/MetaTable.astro';
+import '../styles/writeup.css';
+interface Props { title: string; summary: string; date: Date; category: string; meta?: { label: string; value: string }[]; tools?: string[]; }
+const { title, summary, date, category, meta = [], tools = [] } = Astro.props;
+const rows = [...meta, ...(tools.length ? [{ label: 'Tools', value: tools.join(' · ') }] : []), { label: 'Published', value: date.toISOString().slice(0, 10) }];
+---
+<Layout title={`${title} | Yassine El Ghazi`} description={summary}>
+  <Header />
+  <main id="main" class="wrap">
+    <header class="writeup-head">
+      <a class="back-link" href="/writeups/">← All research</a>
+      <p class="label" style="margin-top:12px">{category.replace(/-/g, ' ')}</p>
+      <h1>{title}</h1>
+      <p class="summary">{summary}</p>
+    </header>
+    <div class="writeup-body">
+      <aside aria-label="Analysis metadata"><MetaTable rows={rows} /></aside>
+      <article class="prose"><slot /></article>
+    </div>
+  </main>
+  <Footer />
+</Layout>

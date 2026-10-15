@@ -28,7 +28,17 @@ for (const file of htmlFiles) {
       if (!destination.includes(`id="${fragment}"`)) failures.push(`${file}: missing anchor ${href}`);
     }
   }
-  if (/<script\b[^>]*src=/.test(html)) failures.push(`${file}: unexpected client JavaScript`);
+  if (/<script\b[^>]*src=/.test(html)) failures.push(`${file}: unexpected external or bundled client JavaScript`);
+  const inline = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(match => match[1]);
+  if (inline.length > 1 || inline.some(code => code.length > 1500)) failures.push(`${file}: inline JavaScript exceeds the one small navigation script allowed`);
+  if (/internship|\bCBI\b|\bPFA\b/i.test(html.replace(/<[^>]+>/g, ' '))) failures.push(`${file}: private internship/company wording must stay out of the public site`);
+}
+// Readability floor: no declared text size below 11.5px (SVG diagram text) in shipped CSS.
+for (const file of files.filter(f => f.endsWith('.css'))) {
+  const css = await readFile(file, 'utf8');
+  for (const match of css.matchAll(/font(?:-size)?:[^;{}]*?(\d+(?:\.\d+)?)px/g)) {
+    if (Number(match[1]) < 11.5) failures.push(`${file}: text size ${match[1]}px is below the 11.5px floor`);
+  }
 }
 const sourceFiles = [...(await Promise.all(['src', 'public', '.github', 'scripts', 'docs'].map(filesAt))).flat(), 'README.md', 'PROGRESS.md', 'astro.config.mjs', 'package.json'];
 const privacyPatterns = [
@@ -52,4 +62,4 @@ for (const asset of ['404.html', 'robots.txt', 'sitemap-index.xml', 'sitemap-0.x
   if (!files.includes(join(root, asset))) failures.push(`Missing required asset: ${asset}`);
 }
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata, assets, source privacy patterns, and zero client JavaScript verified.`);
+console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata, assets, source privacy patterns, private-wording guard, text-size floor, and JavaScript limits (no external/bundled scripts, one small inline script) verified.`);

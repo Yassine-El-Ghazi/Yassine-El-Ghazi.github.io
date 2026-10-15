@@ -1,0 +1,17 @@
+---
+import '../../styles/writeup.css';
+// Disassembly listing. Rows are supplied by the author from a real analysis; nothing is generated here.
+interface Row { addr: string; bytes?: string; text: string; comment?: string; label?: string; highlight?: boolean; }
+interface Props { rows: Row[]; title?: string; arch?: string; caption?: string; }
+const { rows, title = 'Disassembly', arch, caption } = Astro.props;
+---
+<figure class="code-panel figure-box">
+  <header><span class="label">{title}</span>{arch && <span class="label">{arch}</span>}</header>
+  <div class="rows" role="group" aria-label={title}>
+    {rows.map(r => <>
+      {r.label && <div class="disasm-label">{r.label}:</div>}
+      <div class:list={['disasm-row', { hl: r.highlight }]}><span class="a">{r.addr}</span><span class="b">{r.bytes ?? ''}</span><span class="i">{r.text}{r.comment && <span class="c">  ; {r.comment}</span>}</span></div>
+    </>)}
+  </div>
+  {caption && <figcaption style="padding: 0 16px 12px">{caption}</figcaption>}
+</figure>

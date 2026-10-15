@@ -1,0 +1,7 @@
+---
+import '../../styles/writeup.css';
+// Ghidra screenshots, function graphs, and other images. alt text is required: describe what the figure shows.
+interface Props { src: string; alt: string; caption?: string; }
+const { src, alt, caption } = Astro.props;
+---
+<figure class="figure-box"><img src={src} alt={alt} loading="lazy" decoding="async" />{caption && <figcaption>{caption}</figcaption>}</figure>

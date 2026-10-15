@@ -1,14 +1,35 @@
-export const competitions = [
-  {
-    team: '0xUEMF',
-    title: "CSAW’26 CTF Finals MENA qualifier",
-    description: 'Our team qualified for the CSAW 2026 CTF Finals MENA at NYU Abu Dhabi.',
-    result: '36th / 504 teams · global qualification',
-    url: 'https://ctftime.org/event/3355',
-  },
-];
+export interface LogEntry {
+  event: string;
+  result: string;
+  team: string;
+  detail?: string;
+  url?: string;
+}
 
-export const ctfHighlights = [
-  { event: 'NorthSec CTF 2026', team: 'MDN_1CH94N', result: '2nd place', context: 'Team result' },
-  { event: 'HTB Cyber Apocalypse 2026', team: '0xUEMF', result: '66th / 6,744 teams', context: '136 / 136 flags · team result' },
+// Team results only. Rankings that change by season and individual contribution scores are intentionally omitted.
+export const featuredResult = {
+  event: 'CSAW’26',
+  series: 'CTF Finals MENA',
+  status: 'Qualified',
+  global: '36 / 504',
+  globalLabel: 'Global qualification scoreboard',
+  team: '0xUEMF',
+  url: 'https://ctftime.org/event/3355',
+};
+
+export const ctfLog: { year: string; entries: LogEntry[] }[] = [
+  {
+    year: '2026',
+    entries: [
+      {
+        event: 'CSAW CTF',
+        result: 'Finals MENA · qualified',
+        team: '0xUEMF',
+        detail: '36th of 504 teams in the global qualification round. Finals are held at NYU Abu Dhabi.',
+        url: 'https://ctftime.org/event/3355',
+      },
+      { event: 'NorthSec CTF', result: '2nd place', team: 'MDN_1CH94N', detail: 'Team result.' },
+      { event: 'HTB Cyber Apocalypse', result: '66th of 6,744 teams', team: '0xUEMF', detail: '136 / 136 flags. Team result.' },
+    ],
+  },
 ];

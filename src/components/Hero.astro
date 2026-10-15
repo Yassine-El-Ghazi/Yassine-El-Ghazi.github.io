@@ -1,16 +1,68 @@
 ---
 import { profile } from '../data/profile';
 import Icon from './Icon.astro';
-import AnalysisVisual from './AnalysisVisual.astro';
+
+type Tok = { t: 'reg' | 'num' | 'lab' | 'p'; v: string };
+const reg = (v: string): Tok => ({ t: 'reg', v });
+const num = (v: string): Tok => ({ t: 'num', v });
+const p = (v: string): Tok => ({ t: 'p', v });
+
+// Decorative interface study. Bytes and branch offsets are valid x86-64 encodings for these
+// addresses, but the routine is illustrative and does not come from any real sample.
+const rows: { addr: string; bytes: string; mn: string; ops: Tok[]; sel?: boolean }[] = [
+  { addr: '140001420', bytes: '55', mn: 'push', ops: [reg('rbp')] },
+  { addr: '140001421', bytes: '48 89 E5', mn: 'mov', ops: [reg('rbp'), p(', '), reg('rsp')] },
+  { addr: '140001424', bytes: '48 83 EC 20', mn: 'sub', ops: [reg('rsp'), p(', '), num('20h')] },
+  { addr: '140001428', bytes: '8B 45 10', mn: 'mov', ops: [reg('eax'), p(', ['), reg('rbp'), p('+arg_0]')] },
+  { addr: '14000142B', bytes: '83 F8 01', mn: 'cmp', ops: [reg('eax'), p(', '), num('1')] },
+  { addr: '14000142E', bytes: '75 30', mn: 'jne', ops: [{ t: 'lab', v: 'loc_140001460' }], sel: true },
+];
 ---
-<section class="hero-section wrap" aria-labelledby="hero-title">
+<section class="hero wrap" aria-labelledby="hero-title">
   <div class="hero-copy">
-    <p class="eyebrow"><span class="status-dot"></span> CYBERSECURITY ENGINEERING STUDENT</p>
-    <h1 id="hero-title">Yassine<br />El Ghazi<span class="name-period">.</span></h1>
-    <p class="hero-tagline">From bytes to behavior.<br /><span>Learning what’s beneath the surface.</span></p>
-    <p class="hero-description">Final-year cybersecurity engineering student at UEMF, interested in reverse engineering and malware analysis. I build practical skills through CTFs, static APK analysis, and network-security labs.</p>
-    <div class="hero-actions"><a class="button primary" href="#projects">Explore my work <Icon /></a><a class="button secondary" href={profile.cv} download>Download CV <Icon name="download" /></a></div>
+    <ul class="hero-focus label" aria-label="Focus areas">
+      <li>Reverse engineering</li><li>Malware analysis</li><li>Cybersecurity engineering</li>
+    </ul>
+    <h1 id="hero-title">Yassine<br />El Ghazi</h1>
+    <p class="hero-lede">I take software apart to understand how it works.</p>
+    <p class="hero-support">Final-year cybersecurity engineering student at UEMF. I work on reverse engineering, malware analysis, offensive security, and systems and network security.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#work">View selected work <Icon class="go" /></a>
+      <div class="hero-links">
+        <a class="btn" href={profile.github}>GitHub <Icon name="external" class="ext" /></a>
+        <a class="btn" href={profile.cv} download>Resume <Icon name="download" /></a>
+        <a class="btn" href={profile.linkedin}>LinkedIn <Icon name="external" class="ext" /></a>
+      </div>
+    </div>
   </div>
-  <div class="hero-aside"><AnalysisVisual /><div class="hero-aside-note"><span>REVERSE ENGINEERING / MALWARE ANALYSIS</span><p>Read. Trace.<br />Understand.</p></div></div>
-  <div class="hero-strip"><span>BASED IN FÈS, MOROCCO</span><span>UEMF / CYBERSECURITY ENGINEERING</span><a href="#projects">SELECTED WORK BELOW <span aria-hidden="true">↓</span></a></div>
+
+  <figure class="study">
+    <div class="study-head" aria-hidden="true">
+      <div><span class="label">Function</span><span class="v">sub_140001420</span></div>
+      <div><span class="label">Address</span><span class="v amber">0x140001420</span></div>
+      <div><span class="label">Arch</span><span class="v">x86-64</span></div>
+    </div>
+    <ol class="listing" aria-hidden="true">
+      {rows.map(r => (
+        <li class:list={{ sel: r.sel }}>
+          <span class="addr">{r.addr}</span><span class="bytes">{r.bytes}</span>
+          <span class="asm"><span class="mn">{r.mn}</span>{r.ops.map(o => o.t === 'p' ? o.v : <span class={o.t}>{o.v}</span>)}</span>
+        </li>
+      ))}
+    </ol>
+    <div class="cfg" aria-hidden="true">
+      <svg viewBox="0 0 320 160" role="presentation" focusable="false">
+        <path class="edge fall" d="M110 50 C110 80 74 78 74 106" />
+        <path class="edge taken" d="M210 50 C210 80 246 78 246 106" />
+        <polygon class="el-fall" points="70,100 78,100 74,107" />
+        <polygon class="el-taken" points="242,100 250,100 246,107" />
+        <g class="node"><rect x="60" y="6" width="200" height="44" rx="6" /><text class="t1" x="160" y="25" text-anchor="middle">sub_140001420</text><text x="160" y="41" text-anchor="middle">cmp eax, 1 · jne</text></g>
+        <g class="node"><rect x="0" y="108" width="148" height="44" rx="6" /><text class="t1" x="74" y="127" text-anchor="middle">loc_140001430</text><text x="74" y="143" text-anchor="middle" fill="#72a7ff" style="fill:#72a7ff">fall-through</text></g>
+        <g class="node"><rect x="172" y="108" width="148" height="44" rx="6" /><text class="t1" x="246" y="127" text-anchor="middle">loc_140001460</text><text x="246" y="143" text-anchor="middle" style="fill:#74c7b8">jne taken</text></g>
+      </svg>
+    </div>
+    <figcaption><span class="label">Interface study</span><span class="label">Illustrative, not from a real sample</span>
+      <span class="sr-only">Decorative illustration of an x86-64 function disassembly with a conditional branch and a small control-flow graph. It is not taken from any real binary or malware sample.</span>
+    </figcaption>
+  </figure>
 </section>

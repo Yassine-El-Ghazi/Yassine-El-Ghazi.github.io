@@ -1,0 +1,26 @@
+---
+import { ctfLog } from '../data/competitions';
+import { profile } from '../data/profile';
+import SectionBar from './SectionBar.astro';
+import Icon from './Icon.astro';
+---
+<section id="ctf" class="section wrap" aria-labelledby="ctf-title">
+  <SectionBar label="CTF operation log" addr="00401040" />
+  <h2 id="ctf-title">Competition record.</h2>
+  <p class="sec-intro">Team results, recorded as they happened. Rankings that change by season and individual scores are left out.</p>
+  {ctfLog.map(group => (
+    <>
+      <p class="label log-year">{group.year}</p>
+      <ol class="log">
+        {group.entries.map((e, i) => (
+          <li class:list={['log-item', { lead: i === 0 }]}>
+            <div><h3>{e.event}</h3><p class="log-result">{e.result}</p></div>
+            <p class="log-team"><span class="label">Team</span><b>{e.team}</b></p>
+            <p class="log-detail">{e.detail}{e.url && <> <a href={e.url}>CTFtime</a></>}</p>
+          </li>
+        ))}
+      </ol>
+    </>
+  ))}
+  <div class="log-foot"><p>Competing as Awdyane. Team results are shared effort.</p><a class="link" href={profile.ctftime}>CTFtime profile <Icon name="external" /></a></div>
+</section>

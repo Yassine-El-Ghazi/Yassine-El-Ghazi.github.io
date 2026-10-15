@@ -7,12 +7,14 @@ export const profile = {
   ctftime: 'https://ctftime.org/user/213391',
   email: 'yassine.elghazi@eidia.ueuromed.org',
   cv: '/Yassine-El-Ghazi-CV.pdf',
-  description: 'Cybersecurity engineering student at UEMF interested in reverse engineering and malware analysis, with practical work in network security, security monitoring, and CTFs.',
+  description:
+    'Cybersecurity engineering student at UEMF focused on reverse engineering and malware analysis, with practical work in static APK analysis, network security, detection engineering, and CTFs.',
 };
 
+// Grouped by domain, no ratings. Every entry appears in the public CV or a linked public repository.
 export const skills = [
-  { title: 'Security & analysis', items: ['Ghidra', 'Static APK analysis', 'Web application testing', 'OWASP Top 10', 'Burp Suite', 'Nmap', 'Wireshark'] },
-  { title: 'Networks & infrastructure', items: ['TCP/IP & routing', 'FortiGate', 'EVE-NG', 'IKEv2 / IPsec', 'Active-passive HA', 'Firewall policies'] },
-  { title: 'Programming', items: ['Python', 'C', 'C++', 'SQL', 'Bash'] },
-  { title: 'Systems & operations', items: ['Linux', 'Git / GitHub', 'Docker', 'Wazuh', 'Elastic Stack', 'Zabbix'] },
+  { title: 'Reverse engineering / security', items: ['Ghidra', 'Static APK analysis', 'Burp Suite', 'Nmap', 'Wireshark', 'OWASP Top 10', 'Web application testing'] },
+  { title: 'Programming', items: ['C', 'C++', 'Python', 'SQL', 'Bash'] },
+  { title: 'Systems / networking', items: ['Linux', 'TCP/IP & routing', 'FortiGate', 'EVE-NG', 'IKEv2 / IPsec', 'Active-passive HA', 'Firewall policies'] },
+  { title: 'Detection / infrastructure', items: ['Wazuh', 'Elastic Stack', 'Zabbix', 'Docker', 'Git / GitHub'] },
 ];

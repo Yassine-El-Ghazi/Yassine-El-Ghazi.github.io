@@ -1,0 +1,6 @@
+---
+import '../../styles/writeup.css';
+interface Props { rows: { label: string; value: string }[]; }
+const { rows } = Astro.props;
+---
+<dl class="meta">{rows.map(r => <><dt>{r.label.toUpperCase()}</dt><dd>{r.value}</dd></>)}</dl>

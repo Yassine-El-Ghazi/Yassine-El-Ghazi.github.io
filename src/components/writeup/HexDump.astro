@@ -1,0 +1,23 @@
+---
+import '../../styles/writeup.css';
+// Classic offset / hex / ASCII view. Pass real bytes as a hex string ("7f 45 4c 46 ...") or number[].
+interface Props { bytes: string | number[]; base?: number; width?: number; highlight?: [number, number][]; title?: string; }
+const { bytes, base = 0, width = 16, highlight = [], title = 'Hexdump' } = Astro.props;
+const data = typeof bytes === 'string' ? (bytes.match(/[0-9a-fA-F]{2}/g) ?? []).map(h => parseInt(h, 16)) : bytes;
+const isHl = (i: number) => highlight.some(([s, e]) => i >= s && i < e);
+const lines = [];
+for (let i = 0; i < data.length; i += width) {
+  const chunk = data.slice(i, i + width);
+  lines.push({
+    offset: (base + i).toString(16).padStart(8, '0'),
+    cells: chunk.map((b, k) => ({ hex: b.toString(16).padStart(2, '0'), hl: isHl(i + k) })),
+    ascii: chunk.map(b => (b >= 0x20 && b < 0x7f ? String.fromCharCode(b) : '.')).join(''),
+  });
+}
+---
+<figure class="code-panel figure-box">
+  <header><span class="label">{title}</span><span class="label">{data.length} bytes</span></header>
+  <div class="rows" role="group" aria-label={title}>
+    {lines.map(l => <div class="hex-row"><span class="o">{l.offset}</span><span class="h">{l.cells.map((c, k) => <>{c.hl ? <b>{c.hex}</b> : c.hex}{k < l.cells.length - 1 ? ' ' : ''}</>)}</span><span class="t">|{l.ascii}|</span></div>)}
+  </div>
+</figure>

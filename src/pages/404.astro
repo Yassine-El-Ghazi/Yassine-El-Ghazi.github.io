@@ -1,4 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
 ---
-<Layout title="Page not found | Yassine El Ghazi"><main id="main" class="wrap not-found"><p class="eyebrow">404 / PAGE NOT FOUND</p><h1>This route ends here.</h1><p>The page may have moved. My projects and contact details are on the homepage.</p><a class="button primary" href="/">Return to portfolio →</a></main></Layout>
+<Layout title="Page not found | Yassine El Ghazi" noindex>
+  <Header />
+  <main id="main" class="wrap not-found">
+    <p class="label">404 · page not found</p>
+    <h1>This address is not mapped.</h1>
+    <p>The page may have moved. My projects and contact details are on the homepage.</p>
+    <a class="btn primary" href="/">Return to portfolio <Icon class="go" /></a>
+  </main>
+  <Footer />
+</Layout>

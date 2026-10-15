@@ -1,0 +1,6 @@
+---
+import '../../styles/writeup.css';
+interface Props { regs: { name: string; value: string; note?: string }[]; title?: string; }
+const { regs, title = 'Registers' } = Astro.props;
+---
+<dl class="regs" aria-label={title}>{regs.map(r => <div><dt>{r.name.toUpperCase()}</dt><dd>{r.value}{r.note && <small>{r.note}</small>}</dd></div>)}</dl>
