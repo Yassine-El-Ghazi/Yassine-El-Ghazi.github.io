@@ -128,7 +128,7 @@ const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
         <div class="info-grid">
         <div class="sub">
           <header class="pane-h"><span class="label">Source</span><span class="label">C</span></header>
-          <pre class="src"><code set:html={sample.source.slice(1, 7).map(hl).join('\n')} /></pre>
+          <pre class="src" tabindex="0" aria-label="C source of the routine"><code set:html={sample.source.slice(1, 7).map(hl).join('\n')} /></pre>
         </div>
         <div class="sub">
           <header class="pane-h"><span class="label">Sections</span><span class="label">readelf -S</span></header>
@@ -138,7 +138,7 @@ const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
         </div>
         <div class="sub">
           <header class="pane-h"><span class="label">ELF header</span><span class="label">16 bytes</span></header>
-          <div class="hexline"><span class="hl"><span class="hx">00000000</span>  <span class="magic">{sample.elfHeader.slice(0, 11)}</span> {sample.elfHeader.slice(12, 23)}  |<span class="magic">.ELF</span>....|</span><span class="hl"><span class="hx">00000008</span>  {sample.elfHeader.slice(24)}  |........|</span></div>
+          <div class="hexline" tabindex="0" role="group" aria-label="First 16 bytes of the ELF header"><span class="hl"><span class="hx">00000000</span>  <span class="magic">{sample.elfHeader.slice(0, 11)}</span> {sample.elfHeader.slice(12, 23)}  |<span class="magic">.ELF</span>....|</span><span class="hl"><span class="hx">00000008</span>  {sample.elfHeader.slice(24)}  |........|</span></div>
         </div>
         </div>
       </details>
