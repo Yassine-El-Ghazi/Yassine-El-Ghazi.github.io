@@ -42,6 +42,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <script is:inline>
       // Navigation state and the scroll "navigator band". Everything else works without JavaScript.
       (function () {
+        // The workbench info pane is a <details> on narrow screens and always open on wide ones.
+        if (window.matchMedia('(min-width: 900px)').matches) [].forEach.call(document.querySelectorAll('details[data-wide-open]'), function (d) { d.open = true; });
         var ids = ['work', 'research', 'ctf', 'stack', 'about', 'contact'];
         var secs = ids.map(function (i) { return document.getElementById(i); }).filter(Boolean);
         if (!secs.length) return;

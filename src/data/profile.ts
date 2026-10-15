@@ -11,10 +11,13 @@ export const profile = {
     'Cybersecurity engineering student at UEMF focused on reverse engineering and malware analysis, with practical work in static APK analysis, network security, detection engineering, and CTFs.',
 };
 
-// Grouped by domain, no ratings. Every entry appears in the public CV or a linked public repository.
-export const skills = [
-  { title: 'Reverse engineering / security', items: ['Ghidra', 'Static APK analysis', 'Burp Suite', 'Nmap', 'Wireshark', 'OWASP Top 10', 'Web application testing'] },
-  { title: 'Programming', items: ['C', 'C++', 'Python', 'SQL', 'Bash'] },
-  { title: 'Systems / networking', items: ['Linux', 'TCP/IP & routing', 'FortiGate', 'EVE-NG', 'IKEv2 / IPsec', 'Active-passive HA', 'Firewall policies'] },
-  { title: 'Detection / infrastructure', items: ['Wazuh', 'Elastic Stack', 'Zabbix', 'Docker', 'Git / GitHub'] },
+// Each tool is cross-referenced to the public project (or the CTF log) where it is used, as recorded in that
+// repository's README, source, or requirements. Tools known only from the public CV are listed separately.
+export const toolXrefs = [
+  { href: '#p-android', name: 'Android Malware Detection', tools: ['Python', 'Androguard', 'scikit-learn', 'Flask', 'Static APK analysis'] },
+  { href: '#p-forti', name: 'FortiGate VPN & HA Lab', tools: ['FortiGate', 'EVE-NG', 'IKEv2 / IPsec', 'Active-passive HA', 'Firewall policies', 'TCP/IP & routing', 'Wireshark'] },
+  { href: '#p-soc', name: 'SecureBank SOC Lab', tools: ['Wazuh', 'Elastic Stack', 'Zabbix', 'Bash'] },
+  { href: '#p-rice', name: 'MyHyprlandRice', tools: ['Linux', 'Bash', 'Lua', 'Quickshell', 'GNU Stow', 'ShellCheck'] },
+  { href: '#ctf', name: 'CTF log', tools: ['Ghidra'] },
 ];
+export const cvOnlyTools = ['C', 'C++', 'SQL', 'Burp Suite', 'Nmap', 'OWASP Top 10', 'Web application testing', 'Docker', 'Git / GitHub'];

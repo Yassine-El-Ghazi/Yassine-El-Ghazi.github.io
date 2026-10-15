@@ -17,7 +17,7 @@ const symbols = [
   <div class="report-main">
     <div class="work-head">
       <h2 id="work-title">Projects with source and stated limits.</h2>
-      <p class="sec-intro">Public repositories with documentation. The malware detector leads; the network, detection, and systems projects show the engineering around it.</p>
+      <a class="link" href="https://github.com/Yassine-El-Ghazi?tab=repositories">All public repositories <Icon name="external" /></a>
     </div>
 
     <article class="proj featured" id="p-android" aria-labelledby="t-android">
@@ -26,10 +26,9 @@ const symbols = [
         <h3 id="t-android">{featured.name}</h3>
         <p class="desc">{featured.description}</p>
         <p class="approach">{featured.approach}</p>
-        <dl class="meta">{featured.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
-        <ul class="tags" aria-label="Technologies">{featured.tags.map(t => <li>{t}</li>)}</ul>
-        <div class="outcome"><span class="label">Outcome</span><p>{featured.outcome}</p></div>
-        <div class="foot"><a class="link" href={featured.url} aria-label={`View on GitHub: ${featured.name}`}>View on GitHub <Icon name="external" /></a></div>
+        <dl class="meta">{featured.meta?.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
+        <p class="desc result"><span class="label">Outcome</span> {featured.outcome}</p>
+        <div class="foot"><ul class="tags" aria-label="Technologies">{featured.tags.map(t => <li>{t}</li>)}</ul><a class="link" href={featured.url} aria-label={`View on GitHub: ${featured.name}`}>View on GitHub <Icon name="external" /></a></div>
       </div>
 
       <figure class="pipeline">
@@ -37,7 +36,7 @@ const symbols = [
         <ol class="pl-steps">
           <li><div><span class="name">APK</span><span class="desc">Input package, never run</span></div></li>
           <li><div><span class="name">Manifest parse</span><span class="desc">Androguard · permissions, intent actions</span></div></li>
-          <li><div><span class="name">Feature vector</span><span class="desc">x ∈ {'{0,1}'}<sup>215</sup> · Drebin-215 vocabulary</span>
+          <li><div><span class="name">Feature vector</span><span class="desc">215 binary features · Drebin-215 vocabulary</span>
             <div class="bits" aria-hidden="true">{bits.map(b => <i class:list={{ on: b === '1' }}></i>)}</div><span class="bits-cap">Illustrative bit pattern</span></div></li>
           <li><div><span class="name">Random Forest</span><span class="desc">200 trees · feature importances</span></div></li>
           <li class="end"><div><span class="name">Verdict</span><span class="desc">Confidence · high-risk permission flags</span>
@@ -49,9 +48,11 @@ const symbols = [
           <div><dt class="label">Apps</dt><dd>15,036</dd></div>
           <div><dt class="label">Features</dt><dd>215</dd></div>
         </dl>
-        <p class="stats-note">Drebin-215 benchmark, 20% held-out split, from the project report.</p>
+        <p class="stats-note">Drebin-215, 20% held-out split. Report: 98.74%; re-running <span class="mono">train.py</span> with its fixed seed: 98.77%.</p>
       </figure>
 
+      <details class="evidence-d">
+        <summary><span class="label">Model evidence</span><span class="ev-sum">Top 12 features and the held-out confusion matrix</span><span class="more" aria-hidden="true">+</span></summary>
       <div class="evidence">
         <section class="ev-panel" aria-labelledby="ev-feat">
           <header class="ev-head"><h4 id="ev-feat" class="label">What the model keys on</h4><span class="label">Top 12 of 215 · importance %</span></header>
@@ -78,14 +79,15 @@ const symbols = [
               </tbody>
             </table>
           </div>
-          <p class="ev-note">Produced by re-running the repository’s <span class="mono">train.py</span> with its fixed seed. The report quotes 98.74%; the re-run gives 98.77%.</p>
           <p class="ev-note">Three of the top twelve features are manifest permissions. The rest are code-level features from Drebin, which the scanner’s manifest-only extractor cannot read, so scanner results can differ from these benchmark numbers.</p>
         </section>
       </div>
+      </details>
     </article>
 
     <div class="secondary">
       <article class="proj" id="p-forti" aria-labelledby="t-forti">
+        <div>
         <p class="label cat">{forti.category}</p>
         <h3 id="t-forti">{forti.name}</h3>
         <p class="desc">{forti.description}</p>
@@ -96,34 +98,38 @@ const symbols = [
           <path class="tunnel" d="M85 22 H190 V42 H235" /><text x="110" y="15">IKEv2 / ESP</text>
           <rect class="box" x="235" y="26" width="84" height="32" rx="5" /><text x="277" y="46" text-anchor="middle">Remote</text>
         </svg>
-        <dl class="meta">{forti.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
-        {forti.table && (
-          <table class="vlog">
-            <caption class="label">{forti.table.title} · from the {forti.table.source}</caption>
-            <tbody>{forti.table.rows.map(r => <tr><th scope="row">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
-          </table>
-        )}
-        <div class="outcome"><span class="label">Outcome</span><p>{forti.outcome}</p></div>
+        <p class="desc result"><span class="label">Outcome</span> {forti.outcome}</p>
         <div class="foot"><a class="link" href={forti.url} aria-label={`View on GitHub: ${forti.name}`}>View on GitHub <Icon name="external" /></a></div>
+        </div>
+        {forti.table && (
+          <details class="drawer" data-wide-open>
+            <summary><span class="label">{forti.table.title} · {forti.table.rows.length} checks</span><span class="src-note">from the {forti.table.source}</span><span class="more" aria-hidden="true">+</span></summary>
+            <dl class="checks">{forti.table.rows.map(r => <div><dt>{r[0]}</dt><dd>{r[1]}</dd></div>)}</dl>
+          </details>
+        )}
       </article>
 
       <article class="proj" id="p-soc" aria-labelledby="t-soc">
+        <div>
         <p class="label cat">{soc.category}</p>
         <h3 id="t-soc">{soc.name}</h3>
         <p class="desc">{soc.description}</p>
         <p class="flowline" aria-label="Log flow: web server logs to Wazuh to Elasticsearch and Kibana"><span>web logs</span><span class="arrow" aria-hidden="true">→</span><span>Wazuh</span><span class="arrow" aria-hidden="true">→</span><span>Elastic / Kibana</span></p>
-        <dl class="meta">{soc.meta.map(m => <><dt>{m.label}</dt><dd>{m.value}</dd></>)}</dl>
-        {soc.table && (
-          <table class="vlog roles">
-            <caption class="label">{soc.table.title} · from the {soc.table.source}</caption>
-            <tbody>{soc.table.rows.map(r => <tr><th scope="row" class="mono">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
-          </table>
-        )}
-        <ul class="scripts" aria-label="Helper scripts in the repository">
-          {scripts.map(s => <li><span class="mono">{s[0]}</span><span>{s[1]}</span></li>)}
-        </ul>
-        <div class="outcome"><span class="label">Outcome</span><p>{soc.outcome}</p></div>
+        <p class="desc result"><span class="label">Outcome</span> {soc.outcome}</p>
         <div class="foot"><a class="link" href={soc.url} aria-label={`View on GitHub: ${soc.name}`}>View on GitHub <Icon name="external" /></a></div>
+        </div>
+        {soc.table && (
+          <details class="drawer" data-wide-open>
+            <summary><span class="label">{soc.table.title} and helper scripts</span><span class="src-note">from the {soc.table.source}</span><span class="more" aria-hidden="true">+</span></summary>
+            <table class="vlog roles">
+              <caption class="sr-only">{soc.table.title}</caption>
+              <tbody>{soc.table.rows.map(r => <tr><th scope="row" class="mono">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
+            </table>
+            <ul class="scripts" aria-label="Helper scripts in the repository">
+              {scripts.map(s => <li><span class="mono">{s[0]}</span><span>{s[1]}</span></li>)}
+            </ul>
+          </details>
+        )}
       </article>
     </div>
 
@@ -136,17 +142,17 @@ const symbols = [
         <ul class="tags" aria-label="Technologies">{compact.tags.map(t => <li>{t}</li>)}</ul>
         <a class="link" href={compact.url} aria-label={`View on GitHub: ${compact.name}`}>View on GitHub <Icon name="external" /></a>
       </div>
-      <div>
-        {compact.table && (
-          <table class="vlog roles">
-            <caption class="label">{compact.table.title} · from the {compact.table.source}</caption>
+      {compact.table && (
+        <details class="drawer" data-wide-open>
+          <summary><span class="label">{compact.table.title}</span><span class="src-note">from the {compact.table.source}</span><span class="more" aria-hidden="true">+</span></summary>
+          <table class="vlog roles state">
+            <caption class="sr-only">{compact.table.title}</caption>
             <tbody>{compact.table.rows.map(r => <tr><th scope="row" class="mono">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
           </table>
-        )}
-        <p class="flowline" aria-label="Update workflow commands"><span class="mono">myhyprctl update-plan</span><span class="arrow" aria-hidden="true">→</span><span class="mono">update</span><span class="arrow" aria-hidden="true">→</span><span class="mono">recover</span></p>
-      </div>
+          <p class="flowline" aria-label="Update workflow commands"><span class="mono">myhyprctl update-plan</span><span class="arrow" aria-hidden="true">→</span><span class="mono">update</span><span class="arrow" aria-hidden="true">→</span><span class="mono">recover</span></p>
+        </details>
+      )}
     </article>
 
-    <div class="work-more"><p>A selection of public work. More on GitHub.</p><a class="link" href="https://github.com/Yassine-El-Ghazi?tab=repositories">All repositories <Icon name="external" /></a></div>
   </div>
 </section>

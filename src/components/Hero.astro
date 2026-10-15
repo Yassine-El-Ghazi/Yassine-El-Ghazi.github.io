@@ -1,11 +1,12 @@
 ---
 import { profile } from '../data/profile';
+import { mainTeam } from '../data/competitions';
 import sample from '../data/hero-sample.json';
 import Icon from './Icon.astro';
 
 // Everything in the workbench is generated from a real compile: see scripts/hero-sample/generate.py.
 type Row = (typeof sample.rows)[number];
-const ROW = 24, PAD = 8, GUT = 52;
+const ROW = 21, PAD = 8, GUT = 52;
 const REG = /^(?:[re]?[abcd]x|[abcd][lh]|[re]?[sd]il?|[re]?[sb]pl?|r(?:8|9|1[0-5])[dwb]?)$/;
 function tokens(r: Row) {
   if (r.branch) return [{ t: 'lab', v: 'loc_' + r.target }];
@@ -76,6 +77,7 @@ const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
           <a class="btn" href={profile.cv} download>Resume <Icon name="download" /></a>
           <a class="btn" href={profile.linkedin}>LinkedIn <Icon name="external" class="ext" /></a>
         </div>
+        <a class="hero-cred" href={mainTeam.anchor}><span class="label">Team {mainTeam.team}</span><span>{mainTeam.result}, {mainTeam.event}</span><Icon /></a>
       </div>
     </div>
   </div>
@@ -83,14 +85,14 @@ const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
   <figure class="wb">
     <dl class="wb-bar" aria-hidden="true">
       <div><dt class="label">File</dt><dd>sample · {sample.file.format}</dd></div>
-      <div><dt class="label">Arch</dt><dd>{sample.file.arch}</dd></div>
-      <div><dt class="label">Built with</dt><dd>gcc {gccVer} -O1</dd></div>
+      <div class="wb-arch"><dt class="label">Arch</dt><dd>{sample.file.arch}</dd></div>
+      <div class="wb-cc"><dt class="label">Built with</dt><dd>gcc {gccVer} -O1</dd></div>
       <div><dt class="label">Function</dt><dd class="amber">{sample.function.name}</dd></div>
-      <div><dt class="label">Size</dt><dd>{sample.function.bytes} bytes @ {sample.function.fileOffset}</dd></div>
+      <div class="wb-size"><dt class="label">Size</dt><dd>{sample.function.bytes} bytes @ {sample.function.fileOffset}</dd></div>
     </dl>
-    <div class="wb-panes" aria-hidden="true">
-      <section class="pane pane-list">
-        <header class="pane-h"><span class="label">Listing</span><span class="label">{sample.rows.length} insns</span></header>
+    <div class="wb-panes">
+      <section class="pane pane-list" aria-hidden="true">
+        <header class="pane-h"><span class="label">Listing</span><span class="label hint">Hover or tap a row</span></header>
         <div class="listing-scroll">
           <div class="rows" style={`height:${listH}px`}>
             <svg class="gutter" width={GUT} height={listH} viewBox={`0 0 ${GUT} ${listH}`} focusable="false">
@@ -98,7 +100,7 @@ const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
             </svg>
             <ol class="listing">
               {sample.rows.map((r, i) => (
-                <li class={`row b${r.block}`} style={`height:${ROW}px`}>
+                <li class={`row b${r.block}`} style={`height:${ROW}px`} tabindex="-1">
                   <span class="a">{r.addr}</span><span class="by">{r.bytes}</span>
                   <span class="asm"><span class={r.branch || r.ret ? 'mn br' : 'mn'}>{r.mn}</span>{tokens(r).map(t => t.t === 'p' ? t.v : <span class={t.t}>{t.v}</span>)}{note(r, i) && <span class="note">{'  ' + note(r, i)}</span>}</span>
                 </li>
@@ -111,17 +113,19 @@ const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
       <section class="pane pane-graph">
         <header class="pane-h"><span class="label">Graph</span><span class="label">{sample.blocks.length} blocks · {sample.edges.length} edges</span></header>
         <div class="cfg">
-          <svg viewBox="0 0 360 316" focusable="false">
-            {cfgEdges.map(e => <><path class={`edge ${e.k}`} d={e.d} pathLength="1" /><polygon class={`eh ${e.k}`} points={head(e.tip, e.dir)} /></>)}
+          <svg viewBox="0 0 360 316" role="group" aria-label="Control-flow graph of the compiled function. Focus a block to highlight its instructions.">
+            {cfgEdges.map(e => <><path aria-hidden="true" class={`edge ${e.k}`} d={e.d} pathLength="1" /><polygon aria-hidden="true" class={`eh ${e.k}`} points={head(e.tip, e.dir)} /></>)}
             {sample.blocks.map((b, i) => (
-              <g class={`node n${i}`}><rect x={N[i].x} y={N[i].y} width={W} height={H} rx="6" /><text class="t1" x={N[i].x + W / 2} y={N[i].y + 19} text-anchor="middle">{b.label}</text><text x={N[i].x + W / 2} y={N[i].y + 36} text-anchor="middle">{summary[i]}</text></g>
+              <g class={`node n${i}`} tabindex="0" role="img" aria-label={`Block ${b.label}: ${summary[i].replace('insns', 'instructions')}`}><rect aria-hidden="true" x={N[i].x} y={N[i].y} width={W} height={H} rx="6" /><text class="t1" x={N[i].x + W / 2} y={N[i].y + 19} text-anchor="middle">{b.label}</text><text x={N[i].x + W / 2} y={N[i].y + 36} text-anchor="middle">{summary[i]}</text></g>
             ))}
           </svg>
-          <p class="legend"><span class="lg fall"></span>fall-through <span class="lg taken"></span>taken / loop <span class="lg jump"></span>jmp</p>
+          <p class="legend" aria-hidden="true"><span class="lg fall"></span>fall-through <span class="lg taken"></span>taken / loop <span class="lg jump"></span>jmp</p>
         </div>
       </section>
 
-      <section class="pane pane-info">
+      <details class="pane pane-info">
+        <summary class="pane-h"><span class="label">Source · sections · ELF header</span><span class="peek" aria-hidden="true"><b>{sample.elfHeader.slice(0, 11)}</b>  .ELF · {sample.sections.length} sections · 6 lines of C</span><span class="label more" aria-hidden="true">+</span></summary>
+        <div class="info-grid">
         <div class="sub">
           <header class="pane-h"><span class="label">Source</span><span class="label">C</span></header>
           <pre class="src"><code set:html={sample.source.slice(1, 7).map(hl).join('\n')} /></pre>
@@ -136,12 +140,13 @@ const gccVer = sample.file.compiler.match(/\d+\.\d+\.\d+$/)?.[0] ?? '';
           <header class="pane-h"><span class="label">ELF header</span><span class="label">16 bytes</span></header>
           <div class="hexline"><span class="hl"><span class="hx">00000000</span>  <span class="magic">{sample.elfHeader.slice(0, 11)}</span> {sample.elfHeader.slice(12, 23)}  |<span class="magic">.ELF</span>....|</span><span class="hl"><span class="hx">00000008</span>  {sample.elfHeader.slice(24)}  |........|</span></div>
         </div>
-      </section>
+        </div>
+      </details>
     </div>
     <figcaption>
       <span class="label">Real output, not a real sample</span>
-      <span>A short C routine written for this page (a djb2-style hash check), compiled with gcc and disassembled with objdump. Bytes, addresses, blocks and edges come straight from the build; see <span class="mono">scripts/hero-sample</span>. It is not malware and not from any of my projects.</span>
-      <span class="sr-only">Decorative workbench showing the real disassembly of a small compiled C function, its control-flow graph, source, ELF section table and header bytes.</span>
+      <span>A 6-line C hash check written for this page, built with gcc and disassembled with objdump (<span class="mono">scripts/hero-sample</span>). Not malware, not from my projects.</span>
+      <span class="sr-only">Workbench showing the real disassembly of a small compiled C function, its control-flow graph, source, ELF section table and header bytes.</span>
     </figcaption>
   </figure>
 </section>

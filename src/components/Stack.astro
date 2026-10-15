@@ -1,18 +1,24 @@
 ---
-import { skills } from '../data/profile';
+import { toolXrefs, cvOnlyTools } from '../data/profile';
 import Rail from './Rail.astro';
+import Icon from './Icon.astro';
 ---
 <section id="stack" class="section wrap report" aria-labelledby="stack-title">
   <Rail label="Technical stack" addr="00401060" />
   <div class="report-main">
-    <h2 id="stack-title">Tools I work with.</h2>
-    <div class="stack-grid">
-      {skills.map(group => (
-        <section aria-labelledby={`stack-${group.title.replace(/\W+/g, '-').toLowerCase()}`}>
-          <h3 id={`stack-${group.title.replace(/\W+/g, '-').toLowerCase()}`}>{group.title}</h3>
-          <ul>{group.items.map(item => <li>{item}</li>)}</ul>
-        </section>
+    <h2 id="stack-title">Tools, traced to where I used them.</h2>
+    <p class="sec-intro stack-intro">Cross-references, not ratings: each tool links to the public project that uses it.</p>
+    <ul class="xrefs">
+      {toolXrefs.map(x => (
+        <li>
+          <a class="xr" href={x.href}>{x.name} <Icon /></a>
+          <ul class="tools" aria-label={`Tools used in ${x.name}`}>{x.tools.map(t => <li>{t}</li>)}</ul>
+        </li>
       ))}
-    </div>
+      <li class="cv-only">
+        <p class="xr">CV only, no public project yet</p>
+        <ul class="tools" aria-label="Tools listed in the CV without a public project">{cvOnlyTools.map(t => <li>{t}</li>)}</ul>
+      </li>
+    </ul>
   </div>
 </section>

@@ -2,18 +2,16 @@
 import Rail from './Rail.astro';
 import Icon from './Icon.astro';
 const areas = [
-  { id: 'r-static', name: 'Static analysis', text: 'Reading what a program declares before running it. Android manifest permissions and intent actions feed a classifier, and the APK is never executed.', href: '#p-android', evidence: 'Android Malware Detection' },
   { id: 'r-binary', name: 'Binary reversing', text: 'Ghidra-based disassembly and decompilation, practiced on reverse-engineering and binary challenges in CTFs: recovering behavior from machine code.', href: '#ctf', evidence: 'CTF log' },
-  { id: 'r-triage', name: 'Malware triage', text: 'A static-first screening pass with explainable risk indicators, and an honest account of what static analysis misses: obfuscation and dynamic payloads.', href: '#p-android', evidence: 'Detector limitations' },
+  { id: 'r-static', name: 'Static analysis and malware triage', text: 'Reading what a program declares before running it: manifest permissions and intent actions feed an explainable classifier, and the APK is never executed. Obfuscation and dynamic payloads are what it misses.', href: '#p-android', evidence: 'Android Malware Detection' },
   { id: 'r-traffic', name: 'Protocol and traffic analysis', text: 'Verifying behavior at packet level: ESP on the WAN side against RDP on the LAN side in Wireshark, and flow debugging a tunnel that negotiated but dropped return traffic.', href: '#p-forti', evidence: 'FortiGate VPN & HA Lab' },
 ];
 const symbols = [...areas.map(a => ({ id: a.id, label: a.name })), { id: 'r-writeups', label: 'Writeups' }];
 ---
 <section id="research" class="section wrap report" aria-labelledby="research-title">
-  <Rail label="Reverse engineering / security" addr="00401020" symbols={symbols} />
+  <Rail label="Research" addr="00401020" symbols={symbols} />
   <div class="report-main">
     <h2 id="research-title">Understanding software below the source.</h2>
-    <p class="sec-intro">The common thread in my work is recovering behavior from artifacts: manifests, packets, binaries, and logs.</p>
     <div class="focus-grid">
       <ul class="focus-list">
         {areas.map(a => (
@@ -29,9 +27,8 @@ const symbols = [...areas.map(a => ({ id: a.id, label: a.name })), { id: 'r-writ
           <p class="label">Research / writeups</p>
           <h3 id="writeups-title">Coming as I publish analyses.</h3>
         </div>
-        <p>No reversing writeups are published yet. The site is ready for them, and each will carry the material that makes an analysis checkable:</p>
+        <p>None are published yet. Each will carry what makes an analysis checkable:</p>
         <ul aria-label="Planned writeup contents"><li>disassembly</li><li>pseudocode</li><li>call graphs</li><li>hexdumps</li><li>strings</li><li>method notes</li></ul>
-        <p class="hexline" aria-hidden="true"><span class="hx">00000000</span>  7f 45 4c 46  <span>|.ELF|</span></p>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ export interface Project {
   approach?: string;
   outcome: string;
   tags: string[];
-  meta: MetaRow[];
+  meta?: MetaRow[];
   url: string;
   linkLabel: string;
   table?: { title: string; source: string; head: [string, string]; rows: [string, string][] };
@@ -24,14 +24,9 @@ export const featured: Project = {
   approach:
     'Five classifiers were compared on the same split; Random Forest (200 trees) was kept for its interpretable feature importances. The APK is never executed.',
   outcome:
-    'On a 20% held-out split of Drebin-215 (15,036 apps) the project report records about 98.7% accuracy and 0.999 ROC-AUC, with 5-fold cross-validation agreeing; re-running the training script reproduces both. It is a benchmark result for a static first pass: obfuscation and dynamic payloads can evade it, and the repository says so.',
+    'The benchmark numbers come from the project report, agree with 5-fold cross-validation, and were reproduced by re-running the training script. They describe a static first pass: obfuscation and dynamic payloads can evade it, and the repository says so.',
   tags: ['Python', 'Androguard', 'scikit-learn', 'Flask'],
-  meta: [
-    { label: 'TYPE', value: 'Android APK' },
-    { label: 'ANALYSIS', value: 'Static · manifest' },
-    { label: 'TARGET', value: 'Benign / malicious' },
-    { label: 'DATASET', value: 'Drebin-215 · 5,560 malware · 9,476 benign' },
-  ],
+  meta: [{ label: 'DATASET', value: 'Drebin-215 · 5,560 malware · 9,476 benign' }],
   url: 'https://github.com/Yassine-El-Ghazi/android-malware-detection-rf',
   linkLabel: 'android-malware-detection-rf',
 };
@@ -62,11 +57,6 @@ export const secondary: Project[] = [
         ['Post-failover VPN', 'Selector and route restored'],
       ],
     },
-    meta: [
-      { label: 'PROTOCOL', value: 'IKEv2 / IPsec' },
-      { label: 'SECURITY', value: 'FortiGate HA · active-passive' },
-      { label: 'EVIDENCE', value: 'ESP captures · failover test' },
-    ],
     url: 'https://github.com/Yassine-El-Ghazi/fortigate-multisite-vpn-ha-lab',
     linkLabel: 'fortigate-multisite-vpn-ha-lab',
   },
@@ -88,11 +78,6 @@ export const secondary: Project[] = [
         ['VM-WEB', 'Apache / DVWA, Wazuh Agent, Zabbix Agent2'],
       ],
     },
-    meta: [
-      { label: 'DETECTION', value: 'Wazuh / Elastic' },
-      { label: 'MONITORING', value: 'Zabbix' },
-      { label: 'SCOPE', value: 'Team project' },
-    ],
     url: 'https://github.com/Yassine-El-Ghazi/securebank-soc-lab',
     linkLabel: 'securebank-soc-lab',
   },
@@ -106,7 +91,7 @@ export const compact: Project = {
     'A reproducible Arch Linux / CachyOS desktop with automated setup, configuration management, recovery tooling, and a custom settings interface.',
   outcome:
     'Engineered repeatable installation, conflict backups, state separation, and CI checks for shell scripts and configuration.',
-  tags: ['Linux', 'Bash', 'Lua', 'Quickshell'],
+  tags: ['Linux', 'Bash', 'Lua', 'Quickshell', 'GNU Stow', 'ShellCheck'],
   table: {
     title: 'State model',
     source: 'repository README',
@@ -118,10 +103,6 @@ export const compact: Project = {
       ['~/.local/state/myhyprlandrice/', 'Conflict backups and reversible migration archives'],
     ],
   },
-  meta: [
-    { label: 'SYSTEM', value: 'Arch / CachyOS' },
-    { label: 'CHECKS', value: 'ShellCheck · CI' },
-  ],
   url: 'https://github.com/Yassine-El-Ghazi/myHyprlandRice',
   linkLabel: 'myHyprlandRice',
 };
