@@ -1,0 +1,420 @@
+---
+import sample from '../data/hero-sample.json';
+
+const readings = [
+  { title: 'Check length', idea: 'The first question: is there input?', code: 'if (len <= 0) → block 05', explanation: 'The length arrives in esi. A positive value continues into setup; zero or a negative value takes the path that skips every input byte.' },
+  { title: 'Set up', idea: 'Give the loop a starting point.', code: 'h = 5381; end = buf + len;', explanation: 'Copy the input pointer into rdx, calculate the end pointer in rdi, and initialize eax to 0x1505: the decimal seed 5381.' },
+  { title: 'Mix each byte', idea: 'A small loop, made legible.', code: 'h = (h * 33) ^ *buf++;', explanation: 'A shift and an add multiply the 32-bit hash by 33. XOR mixes in one byte. The pointer advances; jne loops back until it reaches the end.' },
+  { title: 'Compare & return', idea: 'Turn the comparison into an answer.', code: 'return h == 0xC0FFEE;', explanation: 'Compare the hash with 0xC0FFEE. sete and movzx turn the equality flag into a complete integer: 1 for a match, 0 otherwise. Then return.' },
+  { title: 'Skip input', idea: 'The short path has the same seed.', code: 'h = 5381; goto compare;', explanation: 'For zero or negative length, no byte is read. Initialize eax to 5381 and jump to block 04 for the comparison. The seed does not match the target, so this path returns 0.' },
+];
+// Coordinates correspond to the six edges in the compiled fixture, including the back edge.
+const paths = ['M155 76V106', 'M290 43H430V106', 'M155 174V204', 'M290 238H320V191H270V204', 'M155 272V309', 'M430 188V343H290'];
+const graphEdges = [[0, 1], [0, 4], [1, 2], [2, 2], [2, 3], [4, 3]];
+const orderedBlocks = [0, 1, 2, 3, 4];
+---
+
+<section id="binary-exhibit" class="binary-exhibit" data-selected="2" aria-labelledby="binary-title">
+  <header class="figure-head">
+    <span>Figure 01 / control flow</span>
+    <span>{sample.file.format} · {sample.file.arch}</span>
+  </header>
+  <h2 id="binary-title">A small routine, <em>taken apart.</em></h2>
+  <p class="figure-sub">Portfolio-authored C · {sample.function.bytes} real bytes · 5 blocks</p>
+
+  <div class="flow" role="group" aria-describedby="binary-paths" aria-label="Control-flow graph. Select a block to read its instructions and explanation.">
+    <svg class="flow-lines" viewBox="0 0 500 380" preserveAspectRatio="none" aria-hidden="true">
+      <defs><marker id="binary-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 6 3 0 6Z" /></marker></defs>
+      {paths.map((d, i) => <path class="edge" data-edge={graphEdges[i].join(' ')} d={d} marker-end="url(#binary-arrow)" />)}
+    </svg>
+    <span class="path-label positive">len &gt; 0</span>
+    <span class="path-label empty">len ≤ 0</span>
+    <span class="path-label finished">end of input</span>
+    {orderedBlocks.map(id => (
+      <button type="button" class={`flow-block block-${id}`} data-select={id} aria-pressed={id === 2 ? 'true' : 'false'} aria-controls={`binary-reading-${id}`}>
+        <span class="block-heading"><span class="block-number">0{id + 1}</span><span>{readings[id].title}</span></span>
+        <span class="block-address">0x{sample.blocks[id].start}</span>
+      </button>
+    ))}
+  </div>
+
+  <p id="binary-paths" class="sr-only">Control flow: block 01 goes to 02 for positive length, or 05 for zero or negative length. Block 02 goes to 03. Block 03 loops to itself while input remains, then goes to 04. Block 05 goes directly to 04. Block 04 returns.</p>
+  <p class="interaction-note"><span aria-hidden="true">↳</span><span class="interactive-prompt">Select any block to follow the reasoning.</span><span class="static-prompt">The five blocks, annotated below.</span></p>
+  <div class="readings">
+    {orderedBlocks.map(id => (
+      <article class="reading" data-block={id} id={`binary-reading-${id}`} aria-labelledby={`binary-reading-title-${id}`}>
+        <div class="reading-heading"><span class="reading-number" aria-hidden="true">0{id + 1}</span><h3 id={`binary-reading-title-${id}`}>{readings[id].idea}</h3></div>
+        <p class="translation" data-block={id}><code>{readings[id].code}</code></p>
+        <p class="explanation" data-block={id}>{readings[id].explanation}</p>
+        <details class="instruction-detail"><summary>Read compiled instructions <span aria-hidden="true">+</span></summary>
+        <div class="listing" aria-label={`Actual instructions for block ${id + 1}`}>
+          {sample.rows.filter(row => row.block === id).map(row => (
+            <code class="instruction"><span class="address">{row.addr}{' '}</span><span class="mnemonic">{row.mn}{' '}</span><span class="operands">{row.ops.replaceAll(',', ', ')}</span></code>
+          ))}
+        </div>
+        </details>
+      </article>
+    ))}
+  </div>
+  <p class="figure-foot">Compiled with GCC -O1 · Intel syntax · static analysis only</p>
+  <p class="selection-status sr-only" aria-live="polite" aria-atomic="true"></p>
+</section>
+
+<script is:inline>
+(() => {
+  const root = document.getElementById('binary-exhibit');
+  if (!root) return;
+  const buttons = [...root.querySelectorAll('[data-select]')];
+  const readings = [...root.querySelectorAll('.reading')];
+  const edges = [...root.querySelectorAll('[data-edge]')];
+  const status = root.querySelector('.selection-status');
+  function select(id, announce) {
+    root.dataset.selected = id;
+    buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.select === id)));
+    readings.forEach(reading => { const active = reading.dataset.block === id; reading.classList.toggle('active', active); if (!active) reading.querySelector('details').open = false; });
+    edges.forEach(edge => edge.classList.toggle('active', edge.dataset.edge.split(' ').includes(id)));
+    if (announce && status) {
+      const reading = readings.find(item => item.dataset.block === id);
+      status.textContent = 'Block ' + (Number(id) + 1) + '. ' + reading.querySelector('h3').textContent + ' ' + reading.querySelector('.explanation').textContent;
+    }
+  }
+  buttons.forEach(button => button.addEventListener('click', () => select(button.dataset.select, true)));
+  select(root.dataset.selected, false);
+  root.classList.add('enhanced');
+})();
+</script>
+
+<style>
+.binary-exhibit {
+  min-width:0;
+  width:100%;
+  color:var(--ink,#20221e);
+  font-family:var(--sans,Arial,sans-serif)
+}
+.figure-head {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:4px 12px;
+  padding:12px 0;
+  border-top:1px solid var(--ink,#20221e);
+  color:var(--muted,#5d6259);
+  font:12px/1.5 var(--mono,monospace);
+  letter-spacing:.025em
+}
+h2 {
+  margin:9px 0 8px;
+  font:normal clamp(28px,2.55vw,37px)/1.14 var(--serif,Georgia,serif);
+  letter-spacing:-.035em;
+  text-wrap:balance
+}
+h2 em {
+  color:var(--accent,#a33327);
+  font-weight:normal
+}
+.figure-sub {
+  margin:0;
+  color:var(--muted,#5d6259);
+  font-size:12px;
+  line-height:1.6
+}
+.flow {
+  position:relative;
+  height:330px;
+  margin-top:15px
+}
+.flow-lines {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:visible
+}
+.flow-lines marker path {
+  fill:var(--muted,#5d6259)
+}
+.edge {
+  fill:none;
+  stroke:var(--line,#c7c9bc);
+  stroke-width:1.3;
+  vector-effect:non-scaling-stroke
+}
+.edge.active {
+  stroke:var(--accent,#a33327);
+  stroke-width:1.8
+}
+.flow-block {
+  position:absolute;
+  left:4%;
+  width:54%;
+  height:17.895%;
+  padding:10px 12px;
+  background:var(--paper,#f1efe6);
+  color:var(--ink,#20221e);
+  border:1px solid var(--line,#c7c9bc);
+  border-radius:0;
+  text-align:left;
+  cursor:pointer;
+  font:14px/1.25 var(--sans,Arial,sans-serif);
+  transition:background .16s,color .16s,border-color .16s
+}
+.block-0 {
+  top:2.105%
+}
+.block-1 {
+  top:27.895%
+}
+.block-2 {
+  top:53.684%
+}
+.block-3 {
+  top:81.316%
+}
+.block-4 {
+  left:72%;
+  top:27.895%;
+  width:28%;
+  height:21.579%
+}
+.block-heading {
+  display:flex;
+  align-items:baseline;
+  gap:10px
+}
+.block-number {
+  flex:none;
+  color:var(--accent,#a33327);
+  font:italic 19px/1 var(--serif,Georgia,serif)
+}
+.block-address {
+  display:block;
+  margin:5px 0 0 28px;
+  color:var(--muted,#5d6259);
+  font:12px/1.2 var(--mono,monospace)
+}
+.block-4 .block-heading {
+  gap:7px
+}
+.block-4 .block-address {
+  margin-left:0
+}
+.flow-block[aria-pressed=true] {
+  background:var(--accent,#a33327);
+  border-color:var(--accent,#a33327);
+  color:var(--paper,#f1efe6)
+}
+.flow-block[aria-pressed=true] .block-number,.flow-block[aria-pressed=true] .block-address {
+  color:var(--paper,#f1efe6)
+}
+.flow-block:hover {
+  border-color:var(--accent,#a33327)
+}
+.flow-block:focus-visible {
+  outline:2px solid var(--accent,#a33327);
+  outline-offset:4px;
+  border-radius:0
+}
+.path-label {
+  position:absolute;
+  font:12px/1.2 var(--mono,monospace);
+  color:var(--muted,#5d6259);
+  background:var(--paper,#f1efe6);
+  padding:1px 3px
+}
+.positive {
+  left:33%;
+  top:21.316%
+}
+.empty {
+  left:65%;
+  top:5.789%
+}
+.finished {
+  left:33%;
+  top:74.474%
+}
+.interaction-note {
+  margin:13px 0 14px;
+  font:12px/1.5 var(--sans,Arial,sans-serif);
+  color:var(--muted,#5d6259)
+}
+.interaction-note>span[aria-hidden] {
+  margin-right:7px;
+  color:var(--accent,#a33327);
+  font-size:18px
+}
+.interactive-prompt,.enhanced .static-prompt {
+  display:none
+}
+.enhanced .interactive-prompt {
+  display:inline
+}
+.reading {
+  padding:16px 0 18px;
+  border-top:1px solid var(--line,#c7c9bc)
+}
+.enhanced .readings {
+  display:grid
+}
+.enhanced .reading {
+  grid-area:1/1;
+  visibility:hidden;
+  pointer-events:none
+}
+.enhanced .reading.active {
+  visibility:visible;
+  pointer-events:auto
+}
+.reading-heading {
+  display:flex;
+  align-items:baseline;
+  gap:12px
+}
+.reading-number {
+  color:var(--accent,#a33327);
+  font:italic 27px/1 var(--serif,Georgia,serif)
+}
+h3 {
+  margin:0;
+  font:normal 19px/1.3 var(--serif,Georgia,serif);
+  letter-spacing:-.015em
+}
+.translation {
+  margin:10px 0 7px;
+  color:var(--accent,#a33327);
+  font-size:13px;
+  line-height:1.5
+}
+.translation code {
+  font-family:var(--mono,monospace)
+}
+.explanation {
+  margin:0 0 14px;
+  color:var(--muted,#5d6259);
+  font-size:13px;
+  line-height:1.65
+}
+.listing {
+  padding:12px 0 0;
+  border-top:1px dotted var(--line,#c7c9bc)
+}
+.instruction {
+  display:grid;
+  grid-template-columns:6ch 6ch minmax(0,1fr);
+  gap:9px;
+  min-width:0;
+  font:13px/1.65 var(--mono,monospace)
+}
+.address {
+  color:var(--muted,#5d6259)
+}
+.mnemonic {
+  color:var(--accent,#a33327)
+}
+.operands {
+  overflow-wrap:anywhere
+}
+.figure-foot {
+  margin:0;
+  padding:10px 0;
+  border-top:1px solid var(--line,#c7c9bc);
+  color:var(--muted,#5d6259);
+  font:12px/1.6 var(--mono,monospace)
+}
+.sr-only {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0
+}
+@media(max-width:440px) {
+  .figure-head {
+    gap:4px 12px
+  }
+  .flow-block {
+    padding:9px 8px;
+    font-size:13px
+  }
+  .block-heading {
+    gap:6px
+  }
+  .block-address {
+    margin-left:0
+  }
+  .block-number {
+    font-size:17px
+  }
+  .block-4 .block-heading {
+    display:flex;
+    gap:4px
+  }
+  .block-4 .block-number {
+    display:inline;
+    font-size:14px
+  }
+  .block-4 {
+    padding-top:12px
+  }
+  .instruction {
+    gap:7px
+  }
+  .finished {
+    left:32%
+  }
+  h2 {
+    font-size:30px
+  }
+  .reading {
+    padding-top:15px
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .flow-block {
+    transition:none
+  }
+}
+</style>
+
+<style>
+.instruction-detail summary {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  min-height:44px;
+  cursor:pointer;
+  font-size:12px;
+  list-style:none;
+  border-top:1px dotted var(--line)
+}
+.instruction-detail summary::-webkit-details-marker {
+  display:none
+}
+.instruction-detail summary>span {
+  font-size:20px;
+  color:var(--accent)
+}
+.instruction-detail[open] summary>span {
+  transform:rotate(45deg)
+}
+.listing {
+  border-top:0;
+  padding-top:4px
+}
+@media(max-width:480px) {
+  .flow {
+    height:330px
+  }
+  .flow-block {
+    padding-block:7px
+  }
+  .block-4 {
+    padding-top:10px
+  }
+}
+</style>

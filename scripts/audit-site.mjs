@@ -31,7 +31,7 @@ for (const file of htmlFiles) {
   }
   if (/<script\b[^>]*src=/.test(html)) failures.push(`${file}: unexpected external or bundled client JavaScript`);
   const inline = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(match => match[1]);
-  if (inline.length > 1 || inline.some(code => code.length > 4800)) failures.push(`${file}: inline JavaScript exceeds the one small navigation script allowed`);
+  if (inline.length > 2 || inline.reduce((sum, code) => sum + code.length, 0) > 4800) failures.push(`${file}: inline JavaScript exceeds the two-script, 4.8KB first-party budget`);
   if (/internship|\bCBI\b|\bPFA\b/i.test(html.replace(/<[^>]+>/g, ' '))) failures.push(`${file}: private internship/company wording must stay out of the public site`);
 }
 // Readability floor: no declared text size below 12px (SVG diagram text; HTML labels use 12.5px) in shipped CSS.
@@ -51,4 +51,4 @@ for (const asset of ['404.html', 'robots.txt', 'sitemap-index.xml', 'sitemap-0.x
 const privacy = await audit({ dist: true });
 for (const f of privacy.findings) failures.push(`${JSON.stringify(f.path)}:${f.line} [${f.rule}] review required`);
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata (including the Open Graph image), assets, private-wording guard, text-size floor, and JavaScript limits (no external/bundled scripts, one small inline script) verified.`);
+console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata (including the Open Graph image), assets, private-wording guard, text-size floor, and JavaScript limits (no external/bundled scripts, two small inline scripts, 4.8KB combined) verified.`);
