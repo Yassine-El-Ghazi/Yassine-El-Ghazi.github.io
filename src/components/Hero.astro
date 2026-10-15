@@ -9,15 +9,16 @@ const p = (v: string): Tok => ({ t: 'p', v });
 
 // Decorative interface study. Bytes and branch offsets are valid x86-64 encodings for these
 // addresses, but the routine is illustrative and does not come from any real sample.
-const rows: { addr: string; bytes: string; mn: string; ops: Tok[]; sel?: boolean }[] = [
-  { addr: '140001420', bytes: '55', mn: 'push', ops: [reg('rbp')] },
+const rows: { addr: string; bytes: string; mn: string; ops: Tok[]; sel?: boolean; note?: string }[] = [
+  { addr: '140001420', bytes: '55', mn: 'push', ops: [reg('rbp')], note: 'prologue' },
   { addr: '140001421', bytes: '48 89 E5', mn: 'mov', ops: [reg('rbp'), p(', '), reg('rsp')] },
   { addr: '140001424', bytes: '48 83 EC 20', mn: 'sub', ops: [reg('rsp'), p(', '), num('20h')] },
-  { addr: '140001428', bytes: '8B 45 10', mn: 'mov', ops: [reg('eax'), p(', ['), reg('rbp'), p('+arg_0]')] },
+  { addr: '140001428', bytes: '8B 45 10', mn: 'mov', ops: [reg('eax'), p(', ['), reg('rbp'), p('+arg_0]')], note: 'stack arg' },
   { addr: '14000142B', bytes: '83 F8 01', mn: 'cmp', ops: [reg('eax'), p(', '), num('1')] },
-  { addr: '14000142E', bytes: '75 30', mn: 'jne', ops: [{ t: 'lab', v: 'loc_140001460' }], sel: true },
+  { addr: '14000142E', bytes: '75 30', mn: 'jne', ops: [{ t: 'lab', v: 'loc_140001460' }], sel: true, note: 'branch' },
 ];
 ---
+<div class="hero-shell">
 <section class="hero wrap" aria-labelledby="hero-title">
   <div class="hero-copy">
     <ul class="hero-focus label" aria-label="Focus areas">
@@ -46,7 +47,7 @@ const rows: { addr: string; bytes: string; mn: string; ops: Tok[]; sel?: boolean
       {rows.map(r => (
         <li class:list={{ sel: r.sel }}>
           <span class="addr">{r.addr}</span><span class="bytes">{r.bytes}</span>
-          <span class="asm"><span class="mn">{r.mn}</span>{r.ops.map(o => o.t === 'p' ? o.v : <span class={o.t}>{o.v}</span>)}</span>
+          <span class="asm"><span class="mn">{r.mn}</span>{r.ops.map(o => o.t === 'p' ? o.v : <span class={o.t}>{o.v}</span>)}{r.note && <span class="note">{'  ; ' + r.note}</span>}</span>
         </li>
       ))}
     </ol>
@@ -58,7 +59,7 @@ const rows: { addr: string; bytes: string; mn: string; ops: Tok[]; sel?: boolean
         <polygon class="el-taken" points="242,100 250,100 246,107" />
         <g class="node"><rect x="60" y="6" width="200" height="44" rx="6" /><text class="t1" x="160" y="25" text-anchor="middle">sub_140001420</text><text x="160" y="41" text-anchor="middle">cmp eax, 1 · jne</text></g>
         <g class="node"><rect x="0" y="108" width="148" height="44" rx="6" /><text class="t1" x="74" y="127" text-anchor="middle">loc_140001430</text><text x="74" y="143" text-anchor="middle" fill="#72a7ff" style="fill:#72a7ff">fall-through</text></g>
-        <g class="node"><rect x="172" y="108" width="148" height="44" rx="6" /><text class="t1" x="246" y="127" text-anchor="middle">loc_140001460</text><text x="246" y="143" text-anchor="middle" style="fill:#74c7b8">jne taken</text></g>
+        <g class="node n-taken"><rect x="172" y="108" width="148" height="44" rx="6" /><text class="t1" x="246" y="127" text-anchor="middle">loc_140001460</text><text x="246" y="143" text-anchor="middle" style="fill:#74c7b8">jne taken</text></g>
       </svg>
     </div>
     <figcaption><span class="label">Interface study</span><span class="label">Illustrative, not from a real sample</span>
@@ -66,3 +67,4 @@ const rows: { addr: string; bytes: string; mn: string; ops: Tok[]; sel?: boolean
     </figcaption>
   </figure>
 </section>
+</div>

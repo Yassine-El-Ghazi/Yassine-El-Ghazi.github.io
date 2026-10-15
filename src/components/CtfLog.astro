@@ -16,7 +16,13 @@ import Icon from './Icon.astro';
           <li class:list={['log-item', { lead: i === 0 }]}>
             <div><h3>{e.event}</h3><p class="log-result">{e.result}</p></div>
             <p class="log-team"><span class="label">Team</span><b>{e.team}</b></p>
-            <p class="log-detail">{e.detail}{e.url && <> <a href={e.url}>CTFtime</a></>}</p>
+            <div>
+              <p class="log-detail">{e.detail}{e.url && <> <a href={e.url}>CTFtime</a></>}</p>
+              {e.rank && (() => { const pct = (e.rank.pos / e.rank.total) * 100; return (
+                <div class="track" role="img" aria-label={`Rank ${e.rank.pos} of ${e.rank.total.toLocaleString('en-US')} teams, top ${pct.toFixed(1)} percent`}>
+                  <span>1</span><span class="line"><i style={`width:${pct}%`}></i><b style={`left:${pct}%`}></b></span><span>{e.rank.total.toLocaleString('en-US')}</span><em>top {pct.toFixed(1)}%</em>
+                </div>); })()}
+            </div>
           </li>
         ))}
       </ol>

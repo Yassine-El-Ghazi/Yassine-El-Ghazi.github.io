@@ -40,20 +40,57 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
     <script is:inline>
-      // Navigation state only. Everything else on the site works without JavaScript.
+      // Navigation state and the scroll "navigator band". Everything else works without JavaScript.
       (function () {
-        var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav a[data-section]'));
-        if (!links.length || !('IntersectionObserver' in window)) return;
+        var ids = ['work', 'research', 'ctf', 'stack', 'about', 'contact'];
+        var secs = ids.map(function (i) { return document.getElementById(i); }).filter(Boolean);
+        if (!secs.length) return;
+        var links = [].slice.call(document.querySelectorAll('.site-nav a[data-section]'));
         var byId = {};
         links.forEach(function (a) { byId[a.getAttribute('data-section')] = a; });
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            if (!entry.isIntersecting || !byId[entry.target.id]) return;
-            links.forEach(function (a) { a.removeAttribute('aria-current'); });
-            byId[entry.target.id].setAttribute('aria-current', 'true');
-          });
-        }, { rootMargin: '-30% 0px -65% 0px' });
-        Object.keys(byId).forEach(function (id) { var el = document.getElementById(id); if (el) io.observe(el); });
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (!e.isIntersecting || !byId[e.target.id]) return;
+              links.forEach(function (a) { a.removeAttribute('aria-current'); });
+              byId[e.target.id].setAttribute('aria-current', 'true');
+            });
+          }, { rootMargin: '-30% 0px -65% 0px' });
+          secs.forEach(function (s) { io.observe(s); });
+        }
+        var band = document.querySelector('.navband');
+        if (!band) return;
+        var mark = document.createElement('i');
+        mark.className = 'mark';
+        function place() {
+          var H = document.documentElement.scrollHeight;
+          var p = (window.scrollY + window.innerHeight * 0.35) / H;
+          mark.style.left = Math.min(1, Math.max(0, p)) * 100 + '%';
+        }
+        function build() {
+          var H = document.documentElement.scrollHeight, y = window.scrollY;
+          var tops = [0].concat(secs.map(function (s) { return s.getBoundingClientRect().top + y; }), [H]);
+          band.textContent = '';
+          for (var i = 0; i < tops.length - 1; i++) {
+            var s = document.createElement('i');
+            s.className = 'seg t' + i;
+            s.style.left = (tops[i] / H) * 100 + '%';
+            s.style.width = ((tops[i + 1] - tops[i]) / H) * 100 + '%';
+            band.appendChild(s);
+          }
+          band.appendChild(mark);
+          place();
+        }
+        var tick = false;
+        window.addEventListener('scroll', function () {
+          if (tick) return;
+          tick = true;
+          requestAnimationFrame(function () { place(); tick = false; });
+        }, { passive: true });
+        window.addEventListener('resize', build);
+        window.addEventListener('load', build);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+        build();
       })();
     </script>
   </body>

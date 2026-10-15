@@ -4,6 +4,7 @@ export interface LogEntry {
   team: string;
   detail?: string;
   url?: string;
+  rank?: { pos: number; total: number };
 }
 
 // Team results only. Rankings that change by season and individual contribution scores are intentionally omitted.
@@ -27,9 +28,10 @@ export const ctfLog: { year: string; entries: LogEntry[] }[] = [
         team: '0xUEMF',
         detail: '36th of 504 teams in the global qualification round. Finals are held at NYU Abu Dhabi.',
         url: 'https://ctftime.org/event/3355',
+        rank: { pos: 36, total: 504 },
       },
       { event: 'NorthSec CTF', result: '2nd place', team: 'MDN_1CH94N', detail: 'Team result.' },
-      { event: 'HTB Cyber Apocalypse', result: '66th of 6,744 teams', team: '0xUEMF', detail: '136 / 136 flags. Team result.' },
+      { event: 'HTB Cyber Apocalypse', result: '66th of 6,744 teams', team: '0xUEMF', detail: '136 / 136 flags. Team result.', rank: { pos: 66, total: 6744 } },
     ],
   },
 ];

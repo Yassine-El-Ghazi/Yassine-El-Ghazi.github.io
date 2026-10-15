@@ -2,4 +2,4 @@
 interface Props { label: string; addr?: string; }
 const { label, addr } = Astro.props;
 ---
-<div class="sec-bar"><span class="label">{label}</span><span class="rule" aria-hidden="true"></span>{addr && <span class="addr" aria-hidden="true">{addr}</span>}</div>
+<div class="sec-bar"><span class="label"><span class="semi" aria-hidden="true">;</span>{label}</span><span class="rule" aria-hidden="true"></span>{addr && <span class="addr" aria-hidden="true">{addr}</span>}</div>

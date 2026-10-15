@@ -18,7 +18,7 @@ const areas = [
         <li>
           <h3>{a.name}</h3>
           <p>{a.text}</p>
-          <a class="evidence" href={a.href}>{a.evidence} <Icon /></a>
+          <a class="evidence" href={a.href}><span class="xref" aria-hidden="true">; xref</span>{a.evidence} <Icon /></a>
         </li>
       ))}
     </ul>

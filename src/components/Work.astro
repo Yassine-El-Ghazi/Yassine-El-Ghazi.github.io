@@ -1,5 +1,6 @@
 ---
 import { featured, secondary, compact } from '../data/projects';
+import { topFeatures, confusion as cm } from '../data/detector';
 import SectionBar from './SectionBar.astro';
 import Icon from './Icon.astro';
 const [forti, soc] = secondary;
@@ -43,6 +44,37 @@ const bits = '10010110001011010100110010111001'.split('');
       </dl>
       <p class="stats-note">Drebin-215 benchmark, 20% held-out split, from the project report.</p>
     </figure>
+
+    <div class="evidence">
+      <section class="ev-panel" aria-labelledby="ev-feat">
+        <header class="ev-head"><h4 id="ev-feat" class="label">What the model keys on</h4><span class="label">Top 12 of 215 · importance %</span></header>
+        <ol class="featbars">
+          {topFeatures.map(f => (
+            <li>
+              <span class="fname">{f.name}</span>
+              <span class="fbar"><i style={`width:${(f.importance / topFeatures[0].importance) * 100}%`}></i><b>{f.importance.toFixed(1)}</b></span>
+              <span class="prev" role="img" aria-label={`Present in ${f.malware}% of malware apps and ${f.benign}% of benign apps`}><span class="pm"><i style={`width:${f.malware}%`}></i></span><span class="pb"><i style={`width:${f.benign}%`}></i></span><em aria-hidden="true">{f.malware} / {f.benign}</em></span>
+            </li>
+          ))}
+        </ol>
+        <p class="ev-legend"><span class="k m" aria-hidden="true"></span>share of malware <span class="k b" aria-hidden="true"></span>share of benign apps</p>
+      </section>
+      <section class="ev-panel" aria-labelledby="ev-cm">
+        <header class="ev-head"><h4 id="ev-cm" class="label">Held-out test set</h4><span class="label">{(cm.benign + cm.malicious).toLocaleString('en-US')} apps</span></header>
+        <div class="cm-wrap">
+          <table class="cm">
+            <caption class="sr-only">Confusion matrix of the Random Forest on the held-out test set</caption>
+            <thead><tr><td></td><th scope="col">Predicted benign</th><th scope="col">Predicted malicious</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Actual benign</th><td class="ok">{cm.tn.toLocaleString('en-US')}</td><td class="bad">{cm.fp}<small>false alarms</small></td></tr>
+              <tr><th scope="row">Actual malicious</th><td class="bad">{cm.fn}<small>missed</small></td><td class="ok m">{cm.tp.toLocaleString('en-US')}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ev-note">Produced by re-running the repository’s <span class="mono">train.py</span> with its fixed seed. The report quotes 98.74%; the re-run gives 98.77%.</p>
+        <p class="ev-note">Three of the top twelve features are manifest permissions. The rest are code-level features from Drebin, which the scanner’s manifest-only extractor cannot read, so scanner results can differ from these benchmark numbers.</p>
+      </section>
+    </div>
   </article>
 
   <div class="secondary">
