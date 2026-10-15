@@ -699,3 +699,7 @@ details[open] > summary .more { transform: rotate(45deg); }
 }
 .drawer > summary .src-note { order: 3; flex-basis: 100%; }
 .drawer > summary .more { margin-left: auto; }
+@container (min-width: 860px) {
+  .focus-list > li, .focus-list > li:last-child { grid-template-rows: auto 1fr auto; }
+  .focus-list .evidence { align-self: end; }
+}
