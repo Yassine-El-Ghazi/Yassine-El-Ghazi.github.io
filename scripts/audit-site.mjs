@@ -33,11 +33,11 @@ for (const file of htmlFiles) {
   if (inline.length > 1 || inline.some(code => code.length > 4800)) failures.push(`${file}: inline JavaScript exceeds the one small navigation script allowed`);
   if (/internship|\bCBI\b|\bPFA\b/i.test(html.replace(/<[^>]+>/g, ' '))) failures.push(`${file}: private internship/company wording must stay out of the public site`);
 }
-// Readability floor: no declared text size below 11.5px (SVG diagram text) in shipped CSS.
+// Readability floor: no declared text size below 12px (SVG diagram text; HTML labels use 12.5px) in shipped CSS.
 for (const file of files.filter(f => f.endsWith('.css'))) {
   const css = await readFile(file, 'utf8');
   for (const match of css.matchAll(/font(?:-size)?:[^;{}]*?(\d+(?:\.\d+)?)px/g)) {
-    if (Number(match[1]) < 11.5) failures.push(`${file}: text size ${match[1]}px is below the 11.5px floor`);
+    if (Number(match[1]) < 12) failures.push(`${file}: text size ${match[1]}px is below the 12px floor`);
   }
 }
 const sourceFiles = [...(await Promise.all(['src', 'public', '.github', 'scripts', 'docs'].map(filesAt))).flat(), 'README.md', 'PROGRESS.md', 'astro.config.mjs', 'package.json'];
@@ -55,11 +55,11 @@ for (const file of sourceFiles) {
   if (privacyPatterns.some(pattern => pattern.test(content))) failures.push(`${file}: potential private data; review required`);
 }
 const index = await readFile(join(root, 'index.html'), 'utf8');
-for (const required of ['name="description"', 'rel="canonical"', 'property="og:title"', 'name="twitter:card"', 'href="/favicon.svg"', 'id="main"']) {
+for (const required of ['name="description"', 'rel="canonical"', 'property="og:title"', 'name="twitter:card" content="summary_large_image"', 'property="og:image" content="https://', 'name="twitter:image:alt"', 'href="/favicon.svg"', 'id="main"']) {
   if (!index.includes(required)) failures.push(`Missing metadata or landmark: ${required}`);
 }
-for (const asset of ['404.html', 'robots.txt', 'sitemap-index.xml', 'sitemap-0.xml', 'favicon.svg', 'Yassine-El-Ghazi-CV.pdf']) {
+for (const asset of ['404.html', 'robots.txt', 'sitemap-index.xml', 'sitemap-0.xml', 'favicon.svg', 'og.png', 'Yassine-El-Ghazi-CV.pdf']) {
   if (!files.includes(join(root, asset))) failures.push(`Missing required asset: ${asset}`);
 }
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata, assets, source privacy patterns, private-wording guard, text-size floor, and JavaScript limits (no external/bundled scripts, one small inline script) verified.`);
+console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata (including the Open Graph image), assets, source privacy patterns, private-wording guard, text-size floor, and JavaScript limits (no external/bundled scripts, one small inline script) verified.`);
