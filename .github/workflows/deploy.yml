@@ -2,7 +2,7 @@ name: Build and deploy portfolio
 
 on:
   push:
-    branches: [main]
+    branches: [main, design-round-4]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -20,11 +20,30 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - name: Set up Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           cache: npm
+      - name: Install metadata inspectors
+        run: sudo apt-get update -qq && sudo apt-get install -y libimage-exiftool-perl poppler-utils
+      - name: Install checksum-verified Gitleaks
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/gitleaks.tar.gz"
+          curl --fail --silent --show-error --location --retry 2 https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz -o "$archive"
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $archive" | sha256sum --check --status
+          mkdir -p "$RUNNER_TEMP/gitleaks-bin"
+          tar --no-same-owner -xzf "$archive" -C "$RUNNER_TEMP/gitleaks-bin" gitleaks
+          echo "$RUNNER_TEMP/gitleaks-bin" >> "$GITHUB_PATH"
+      - name: Test privacy rules
+        run: npm test
+      - name: Scan tracked source and complete reachable history
+        run: npm run audit:secrets && npm run audit:history
       - name: Install locked dependencies
         run: npm ci
       - name: Check Astro and TypeScript
@@ -33,16 +52,18 @@ jobs:
         run: npm run build
       - name: Audit links, assets, and public source
         run: npm run audit:site
+      - name: Audit publication policy and generated files
+        run: npm run audit:privacy
       - name: Configure Pages
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: dist
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     permissions:

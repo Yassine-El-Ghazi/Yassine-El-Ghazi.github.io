@@ -8,7 +8,11 @@
     "check": "astro check",
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1",
-    "audit:site": "node scripts/audit-site.mjs"
+    "audit:site": "node scripts/audit-site.mjs",
+    "test": "node --test scripts/*.test.mjs",
+    "audit:privacy": "node scripts/audit-privacy.mjs --dist",
+    "audit:history": "node scripts/audit-privacy.mjs --history",
+    "audit:secrets": "node scripts/audit-secrets.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",

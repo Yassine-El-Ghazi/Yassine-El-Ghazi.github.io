@@ -12,3 +12,26 @@ output/
 .venv/
 playwright-report/
 test-results/
+
+# Private records, recovery material and temporary documents
+PROGRESS.md
+/docs/CONTENT.md
+/public/*[Cc][Vv]*
+/public/*[Rr]esume*
+*.bundle
+*.bak
+*.backup
+*.orig
+*.swp
+*.sql
+*.sqlite*
+*.db
+*.pem
+*.key
+*.p12
+*.pfx
+*.tar
+*.tar.gz
+backup/
+backups/
+private/

@@ -1,5 +1,5 @@
 ---
-import { toolXrefs, cvOnlyTools } from '../data/profile';
+import { toolXrefs } from '../data/profile';
 import Rail from './Rail.astro';
 import Icon from './Icon.astro';
 ---
@@ -15,10 +15,6 @@ import Icon from './Icon.astro';
           <ul class="tools" aria-label={`Tools used in ${x.name}`}>{x.tools.map(t => <li>{t}</li>)}</ul>
         </li>
       ))}
-      <li class="cv-only">
-        <p class="xr">CV only, no public project yet</p>
-        <ul class="tools" aria-label="Tools listed in the CV without a public project">{cvOnlyTools.map(t => <li>{t}</li>)}</ul>
-      </li>
     </ul>
   </div>
 </section>

@@ -1,3 +1,4 @@
+import { audit } from './audit-privacy.mjs';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { resolve, dirname, join } from 'node:path';
 
@@ -40,26 +41,14 @@ for (const file of files.filter(f => f.endsWith('.css'))) {
     if (Number(match[1]) < 12) failures.push(`${file}: text size ${match[1]}px is below the 12px floor`);
   }
 }
-const sourceFiles = [...(await Promise.all(['src', 'public', '.github', 'scripts', 'docs'].map(filesAt))).flat(), 'README.md', 'PROGRESS.md', 'astro.config.mjs', 'package.json'];
-const privacyPatterns = [
-  /gh[pousr]_[A-Za-z0-9]{30,}/,
-  /github_pat_[A-Za-z0-9_]{30,}/,
-  /AKIA[0-9A-Z]{16}/,
-  /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
-  /\b(?:10\.\d{1,3}|192\.168|172\.(?:1[6-9]|2\d|3[01]))\.\d{1,3}\.\d{1,3}\b/,
-  /\+212[\s\d]{9,}/,
-];
-for (const file of sourceFiles) {
-  if (!/\.(astro|ts|mjs|css|svg|txt|yml|md)$/.test(file)) continue;
-  const content = await readFile(file, 'utf8');
-  if (privacyPatterns.some(pattern => pattern.test(content))) failures.push(`${file}: potential private data; review required`);
-}
 const index = await readFile(join(root, 'index.html'), 'utf8');
 for (const required of ['name="description"', 'rel="canonical"', 'property="og:title"', 'name="twitter:card" content="summary_large_image"', 'property="og:image" content="https://', 'name="twitter:image:alt"', 'href="/favicon.svg"', 'id="main"']) {
   if (!index.includes(required)) failures.push(`Missing metadata or landmark: ${required}`);
 }
-for (const asset of ['404.html', 'robots.txt', 'sitemap-index.xml', 'sitemap-0.xml', 'favicon.svg', 'og.png', 'Yassine-El-Ghazi-CV.pdf']) {
+for (const asset of ['404.html', 'robots.txt', 'sitemap-index.xml', 'sitemap-0.xml', 'favicon.svg', 'og.png']) {
   if (!files.includes(join(root, asset))) failures.push(`Missing required asset: ${asset}`);
 }
+const privacy = await audit({ dist: true });
+for (const f of privacy.findings) failures.push(`${JSON.stringify(f.path)}:${f.line} [${f.rule}] review required`);
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata (including the Open Graph image), assets, source privacy patterns, private-wording guard, text-size floor, and JavaScript limits (no external/bundled scripts, one small inline script) verified.`);
+console.log(`Site audit passed: ${htmlFiles.length} HTML pages; internal links, anchors, metadata (including the Open Graph image), assets, private-wording guard, text-size floor, and JavaScript limits (no external/bundled scripts, one small inline script) verified.`);
