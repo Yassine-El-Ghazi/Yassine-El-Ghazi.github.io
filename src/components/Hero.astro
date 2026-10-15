@@ -1,0 +1,16 @@
+---
+import { profile } from '../data/profile';
+import Icon from './Icon.astro';
+import AnalysisVisual from './AnalysisVisual.astro';
+---
+<section class="hero-section wrap" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="status-dot"></span> CYBERSECURITY ENGINEERING STUDENT</p>
+    <h1 id="hero-title">Yassine<br />El Ghazi<span class="name-period">.</span></h1>
+    <p class="hero-tagline">From bytes to behavior.<br /><span>Learning what’s beneath the surface.</span></p>
+    <p class="hero-description">Final-year cybersecurity engineering student at UEMF, interested in reverse engineering and malware analysis. I build practical skills through CTFs, static APK analysis, and network-security labs.</p>
+    <div class="hero-actions"><a class="button primary" href="#projects">Explore my work <Icon /></a><a class="button secondary" href={profile.cv} download>Download CV <Icon name="download" /></a></div>
+  </div>
+  <div class="hero-aside"><AnalysisVisual /><div class="hero-aside-note"><span>REVERSE ENGINEERING / MALWARE ANALYSIS</span><p>Read. Trace.<br />Understand.</p></div></div>
+  <div class="hero-strip"><span>BASED IN FÈS, MOROCCO</span><span>UEMF / CYBERSECURITY ENGINEERING</span><a href="#projects">SELECTED WORK BELOW <span aria-hidden="true">↓</span></a></div>
+</section>

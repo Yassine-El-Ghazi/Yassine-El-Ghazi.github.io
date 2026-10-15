@@ -1,0 +1,21 @@
+---
+import headingFont from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url';
+import '@fontsource-variable/space-grotesk';
+import '../styles/global.css';
+import { profile } from '../data/profile';
+interface Props { title?: string; description?: string; }
+const { title = 'Yassine El Ghazi | Cybersecurity', description = profile.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title><meta name="description" content={description} /><meta name="author" content={profile.name} /><meta name="theme-color" content="#141413" />
+    <link rel="canonical" href={canonical} /><link rel="icon" type="image/svg+xml" href="/favicon.svg" /><link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={headingFont} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:site_name" content="Yassine El Ghazi" /><meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} />
+  </head>
+  <body id="top"><a class="skip-link" href="#main">Skip to content</a><slot /></body>
+</html>

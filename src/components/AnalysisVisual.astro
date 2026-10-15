@@ -1,0 +1,24 @@
+---
+interface Props { variant?: 'assembly' | 'malware'; }
+const { variant = 'assembly' } = Astro.props;
+const instructions = [
+  { offset: '0000', bytes: '55', operation: 'push', operand: 'rbp', note: 'save frame' },
+  { offset: '0001', bytes: '48 89 e5', operation: 'mov', operand: 'rbp, rsp', note: 'set frame' },
+  { offset: '0004', bytes: '31 c0', operation: 'xor', operand: 'eax, eax', note: 'return zero' },
+  { offset: '0006', bytes: '5d', operation: 'pop', operand: 'rbp', note: 'restore frame' },
+  { offset: '0007', bytes: 'c3', operation: 'ret', operand: '', note: 'return' },
+];
+---
+<figure class:list={['analysis-visual', variant]}>
+  <div class="analysis-toolbar"><span class="analysis-cross" aria-hidden="true">+</span><span>{variant === 'assembly' ? 'STATIC INSPECTION' : 'APK / STATIC ANALYSIS'}</span><span class="analysis-arch">{variant === 'assembly' ? 'x86-64' : 'DREBIN-215'}</span></div>
+  {variant === 'assembly' ? <>
+    <div class="binary-header"><span class="mini-label">.text / illustrative routine</span><span class="binary-function">return_zero()</span></div>
+    <div class="disassembly" aria-hidden="true"><div class="disassembly-labels"><span>OFFSET</span><span>BYTES</span><span>INSTRUCTION</span><span>NOTE</span></div>{instructions.map((item,index) => <div class:list={['instruction-row', { selected: index === 2 }]}><span class="offset">{item.offset}</span><span class="bytes">{item.bytes}</span><span class="instruction"><b>{item.operation}</b> {item.operand}</span><span class="instruction-note">{item.note}</span></div>)}</div>
+    <div class="analysis-flow" aria-hidden="true"><span>entry</span><span class="flow-line"></span><span>frame</span><span class="flow-line"></span><span>return</span></div>
+    <div class="binary-sections" aria-hidden="true"><span>.text <b>CODE</b></span><span>.rdata <b>CONSTANTS</b></span><span>.data <b>STATE</b></span></div>
+    <figcaption class="analysis-caption">Five instructions. One simple behavior.<span class="sr-only">Illustrative x86-64 assembly routine that returns zero. Decorative educational example, not a malware sample.</span></figcaption>
+  </> : <>
+    <div class="malware-flow"><div class="analysis-stage"><span class="stage-index">01</span><div><span class="mini-label">INPUT</span><h4>Android APK</h4><p>Static inspection. No execution.</p></div><span class="stage-symbol" aria-hidden="true">APK</span></div><div class="stage-connector" aria-hidden="true"></div><div class="analysis-stage"><span class="stage-index">02</span><div><span class="mini-label">FEATURE EXTRACTION</span><h4>Signals, not assumptions.</h4><p>Permissions · API calls · indicators</p></div></div><div class="stage-connector" aria-hidden="true"></div><div class="analysis-stage final-stage"><span class="stage-index">03</span><div><span class="mini-label">RANDOM FOREST</span><h4>Classification & confidence</h4><p>Benign / malicious · risk indicators</p></div></div></div>
+    <figcaption class="analysis-caption">Project workflow / static-only detection has limits.</figcaption>
+  </>}
+</figure>

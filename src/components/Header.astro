@@ -1,0 +1,11 @@
+---
+import { profile } from '../data/profile';
+import Icon from './Icon.astro';
+---
+<header class="site-header wrap">
+  <a class="wordmark" href="#top"><span class="brand-mark">y.</span> EL GHAZI<span class="wordmark-dot">/</span><span class="sr-only"> — back to top</span></a>
+  <nav aria-label="Main navigation">
+    <a href="#projects">Work</a><a href="#about">About</a><a href="#competitions">CTFs</a><a href="#contact">Contact</a>
+  </nav>
+  <a class="header-github" href={profile.github} aria-label="Yassine El Ghazi on GitHub"><Icon name="github" /><span>GitHub</span><Icon name="external" /></a>
+</header>

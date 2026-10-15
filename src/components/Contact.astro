@@ -1,0 +1,5 @@
+---
+import { profile } from '../data/profile';
+import Icon from './Icon.astro';
+---
+<section id="contact" class="section wrap contact-section" aria-labelledby="contact-title"><div><p class="eyebrow">04 / CONTACT</p><h2 id="contact-title">Let’s talk<br /><span class="muted">security.</span></h2><p>Open to security projects, technical conversations,<br class="desktop-break" /> and opportunities to learn.</p></div><div class="contact-links"><a href={`mailto:${profile.email}`}><span><span class="mini-label">EMAIL</span><span class="email-label">{profile.email}</span></span><Icon name="external" /></a><a href={profile.linkedin}><span><span class="mini-label">CONNECT</span><span>LinkedIn</span></span><Icon name="external" /></a><a href={profile.github}><span><span class="mini-label">CODE & DOCUMENTATION</span><span>GitHub</span></span><Icon name="external" /></a></div></section>
