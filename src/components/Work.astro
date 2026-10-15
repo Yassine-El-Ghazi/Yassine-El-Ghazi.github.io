@@ -123,6 +123,7 @@ const symbols = [
             <summary><span class="label">{soc.table.title} and helper scripts</span><span class="src-note">from the {soc.table.source}</span><span class="more" aria-hidden="true">+</span></summary>
             <table class="vlog roles">
               <caption class="sr-only">{soc.table.title}</caption>
+              <colgroup><col class="k" /><col /></colgroup>
               <tbody>{soc.table.rows.map(r => <tr><th scope="row" class="mono">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
             </table>
             <ul class="scripts" aria-label="Helper scripts in the repository">
@@ -147,6 +148,7 @@ const symbols = [
           <summary><span class="label">{compact.table.title}</span><span class="src-note">from the {compact.table.source}</span><span class="more" aria-hidden="true">+</span></summary>
           <table class="vlog roles state">
             <caption class="sr-only">{compact.table.title}</caption>
+            <colgroup><col class="k" /><col /></colgroup>
             <tbody>{compact.table.rows.map(r => <tr><th scope="row" class="mono">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody>
           </table>
           <p class="flowline" aria-label="Update workflow commands"><span class="mono">myhyprctl update-plan</span><span class="arrow" aria-hidden="true">→</span><span class="mono">update</span><span class="arrow" aria-hidden="true">→</span><span class="mono">recover</span></p>

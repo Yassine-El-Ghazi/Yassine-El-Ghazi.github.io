@@ -593,7 +593,7 @@ details[open] > summary .more { transform: rotate(45deg); }
 .drawer .flowline { margin-top: 14px; }
 .drawer[open] { padding-bottom: 4px; }
 .checks { display: grid; border-top: 1px solid var(--line); }
-.vlog.state th { width: 46%; padding-right: 20px; }
+.vlog.state th { padding-right: 20px; }
 .compact .drawer { margin-top: 0; }
 
 /* About and contact share one section */
@@ -625,9 +625,12 @@ details[open] > summary .more { transform: rotate(45deg); }
   .secondary > .proj { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
   .secondary .drawer, .compact .drawer { margin-top: 30px; }
 }
-@media (min-width: 1100px) {
-  .hero-cta { flex-wrap: nowrap; gap: 10px; }
+@media (min-width: 560px) {
+  .hero-cta { column-gap: 10px; }
+  .hero-cta .btn { white-space: nowrap; }
+  .hero-cred { flex-basis: 100%; }
 }
+@media (min-width: 560px) and (max-width: 899px) { .wb-bar { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 .proj .desc.result { margin-top: 12px; font-size: 15px; }
 .proj .desc.result .label { margin-right: 6px; color: var(--teal); }
@@ -661,3 +664,22 @@ details[open] > summary .more { transform: rotate(45deg); }
   .tools li { padding: 4px 8px; font-size: 14px; }
 }
 @container (min-width: 760px) { .work-head { grid-template-columns: 1fr auto; align-items: end; column-gap: 32px; } }
+
+/* Disclosure summaries on narrow screens: title and toggle on one line, source note below */
+@media (max-width: 559px) {
+  .drawer > summary .src-note { order: 3; flex-basis: 100%; }
+  .drawer > summary .more { margin-left: auto; }
+  .evidence-d > summary { display: grid; grid-template-columns: 1fr auto; row-gap: 4px; }
+  .evidence-d > summary .ev-sum { grid-column: 1 / -1; grid-row: 2; }
+  .pane-info .peek { display: none; }
+  .pane-info > summary .more { margin-left: auto; }
+}
+
+/* Desktop polish: one-line section headings, steadier project titles, tighter evidence tables */
+@media (min-width: 1100px) {
+  .section h2 { max-width: none; font-size: clamp(40px, 3.4vw, 52px); }
+}
+.proj h3 { hyphens: manual; }
+.secondary .proj h3 { font-size: clamp(24px, 2.2vw, 28px); }
+.vlog col.k { width: 30%; }
+.vlog.state col.k { width: 46%; }
