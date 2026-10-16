@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { toolXrefs } from '../data/profile';
 ---
-<section id="stack" class="stack-section wrap" aria-labelledby="stack-title"><div><p class="eyebrow">Tools with a trace</p><h2 id="stack-title">Used in practice.</h2><p>Each group links to the public work where the tools are used.</p></div><ul class="tool-index">{toolXrefs.map(x=><li><a href={x.href}>{x.name}<span aria-hidden="true">↗</span></a><p>{x.tools.join(' · ')}</p></li>)}</ul></section>
+<section id="stack" class="stack-section wrap" aria-labelledby="stack-title"><div><h2 id="stack-title">Used in practice.</h2><p>Each group links to the public work where the tools are used.</p></div><ul class="tool-index">{toolXrefs.map(x=><li><a href={x.href}>{x.name}<span aria-hidden="true"><Icon name="arrow" /></span></a><p>{x.tools.join(' · ')}</p></li>)}</ul></section>

@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import sample from '../data/hero-sample.json';
 
 const readings = [
@@ -22,7 +23,7 @@ const orderedBlocks = [0, 1, 2, 3, 4];
   <h2 id="binary-title">A small routine, <em>taken apart.</em></h2>
   <p class="figure-sub">Portfolio-authored C · {sample.function.bytes} real bytes · 5 blocks</p>
 
-  <div class="flow" role="group" aria-describedby="binary-paths" aria-label="Control-flow graph. Select a block to read its instructions and explanation.">
+  <div class="flow" translate="no" role="group" aria-describedby="binary-paths" aria-label="Control-flow graph. Select a block to read its instructions and explanation.">
     <svg class="flow-lines" viewBox="0 0 500 380" preserveAspectRatio="none" aria-hidden="true">
       <defs><marker id="binary-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 6 3 0 6Z" /></marker></defs>
       {paths.map((d, i) => <path class="edge" data-edge={graphEdges[i].join(' ')} d={d} marker-end="url(#binary-arrow)" />)}
@@ -39,7 +40,7 @@ const orderedBlocks = [0, 1, 2, 3, 4];
   </div>
 
   <p id="binary-paths" class="sr-only">Control flow: block 01 goes to 02 for positive length, or 05 for zero or negative length. Block 02 goes to 03. Block 03 loops to itself while input remains, then goes to 04. Block 05 goes directly to 04. Block 04 returns.</p>
-  <p class="interaction-note"><span aria-hidden="true">↳</span><span class="interactive-prompt">Select any block to follow the reasoning.</span><span class="static-prompt">The five blocks, annotated below.</span></p>
+  <p class="interaction-note"><span aria-hidden="true"><Icon name="turn" /></span><span class="interactive-prompt">Select any block to follow the reasoning.</span><span class="static-prompt">The five blocks, annotated below.</span></p>
   <div class="readings">
     {orderedBlocks.map(id => (
       <article class="reading" data-block={id} id={`binary-reading-${id}`} aria-labelledby={`binary-reading-title-${id}`}>
@@ -47,7 +48,7 @@ const orderedBlocks = [0, 1, 2, 3, 4];
         <p class="translation" data-block={id}><code>{readings[id].code}</code></p>
         <p class="explanation" data-block={id}>{readings[id].explanation}</p>
         <details class="instruction-detail"><summary>Read compiled instructions <span aria-hidden="true">+</span></summary>
-        <div class="listing" aria-label={`Actual instructions for block ${id + 1}`}>
+        <div class="listing" translate="no" aria-label={`Actual instructions for block ${id + 1}`}>
           {sample.rows.filter(row => row.block === id).map(row => (
             <code class="instruction"><span class="address">{row.addr}{' '}</span><span class="mnemonic">{row.mn}{' '}</span><span class="operands">{row.ops.replaceAll(',', ', ')}</span></code>
           ))}
@@ -135,7 +136,7 @@ h2 em {
 }
 .edge {
   fill:none;
-  stroke:var(--line,#c7c9bc);
+  stroke:var(--line-strong,#74858f);
   stroke-width:1.3;
   vector-effect:non-scaling-stroke
 }
@@ -151,7 +152,7 @@ h2 em {
   padding:10px 12px;
   background:var(--paper,#f1efe6);
   color:var(--ink,#20221e);
-  border:1px solid var(--line,#c7c9bc);
+  border:1px solid var(--line-strong,#74858f);
   border-radius:0;
   text-align:left;
   cursor:pointer;
@@ -417,4 +418,13 @@ h3 {
     padding-top:10px
   }
 }
+</style>
+
+<style>
+.flow-block:hover { border-color:var(--accent);outline:1px solid var(--accent);outline-offset:3px }
+.flow-block:not([aria-pressed=true]):hover { background:var(--wash);color:var(--foreground) }
+.flow-block:not([aria-pressed=true]):hover .block-number,.flow-block:not([aria-pressed=true]):hover .block-address { color:var(--accent) }
+.flow-block[aria-pressed=true]:hover { box-shadow:inset 0 0 0 2px var(--canvas) }
+.flow-block:focus-visible { outline:2px solid var(--accent);outline-offset:4px }
+.flow-lines marker path { fill:context-stroke }
 </style>

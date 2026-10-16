@@ -1,16 +1,17 @@
 ---
+import Icon from './Icon.astro';
 import BinaryExhibit from './BinaryExhibit.astro';
 import { mainTeam } from '../data/competitions';
 ---
 <section class="hero wrap" aria-labelledby="hero-title">
   <div class="hero-copy">
     <p class="eyebrow">Cybersecurity engineering student · UEMF</p>
-    <h1 id="hero-title">Yassine<br /><em>El Ghazi.</em></h1>
+    <h1 id="hero-title" translate="no">Yassine<br /><em>El Ghazi.</em></h1>
     <p class="hero-lede">Understanding software<br class="desktop-break" /> from the inside out.</p>
     <p class="hero-focus">Reverse engineering <span aria-hidden="true">/</span><br /> Malware analysis</p>
-    <a class="text-link hero-link" href="#work">Explore selected work <span aria-hidden="true">↓</span></a>
-    <a class="hero-feature" href="#p-android"><span>Featured case</span><strong>Android Malware Detection</strong><span aria-hidden="true">↗</span></a>
-    <div class="hero-footnote"><span class="annotation-mark" aria-hidden="true">↳</span><p>Final-year student · Expected graduation 2027.<br /><a href={mainTeam.anchor}>With team {mainTeam.team} · {mainTeam.result}, {mainTeam.event}</a></p></div>
+    <a class="text-link hero-link" href="#work">Explore selected work <span aria-hidden="true"><Icon name="down" /></span></a>
+    <a class="hero-feature" href="#p-android"><span>Featured case</span><strong>Android Malware Detection</strong><span aria-hidden="true"><Icon name="arrow" /></span></a>
+    <div class="hero-footnote"><span class="annotation-mark" aria-hidden="true"><Icon name="turn" /></span><p>Final-year student · Expected graduation 2027.<br /><a href={mainTeam.anchor}>With team {mainTeam.team} · {mainTeam.result}, {mainTeam.event}</a></p></div>
   </div>
   <BinaryExhibit />
 </section>

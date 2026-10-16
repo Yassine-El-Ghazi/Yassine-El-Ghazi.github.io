@@ -1,35 +1,38 @@
 ---
+import Icon from './Icon.astro';
 import { featured, secondary, compact } from '../data/projects';
 import { confusion as cm } from '../data/detector';
 const [forti,soc] = secondary;
 ---
 <section class="work-section wrap" id="work" aria-labelledby="work-title">
-  <header class="section-heading"><div><p class="eyebrow">Source, approach, evidence</p><h2 id="work-title">Selected work.</h2></div><a class="text-link" href="https://github.com/Yassine-El-Ghazi?tab=repositories">All repositories <span aria-hidden="true">↗</span></a></header>
+  <header class="section-heading"><div><h2 id="work-title">Selected work.</h2></div><a class="text-link" href="https://github.com/Yassine-El-Ghazi?tab=repositories">All repositories <span aria-hidden="true"><Icon name="external" /></span></a></header>
   <article class="case-feature" id="p-android" aria-labelledby="android-title">
     <div class="case-copy">
-      <p class="eyebrow case-category">Android Malware Detection</p>
-      <h3 id="android-title">Reading an APK<br /> before it runs.</h3>
+      <p class="case-category">Static Android analysis</p>
+      <h3 id="android-title">Android Malware<br /> Detection.</h3>
       <p class="case-intro">A static first pass at a difficult question: what can an Android package tell us about its behavior without executing it?</p>
-      <dl class="case-facts">
-        <div><dt>Implementation</dt><dd>A Python CLI scanner and Flask interface. Androguard extracts manifest permissions and intent actions; a Random Forest returns a classification, confidence, and high-risk permission flags.</dd></div>
-        <div><dt>Approach</dt><dd>Five classifiers compared on the same split. A 200-tree Random Forest was retained for its interpretable feature importances.</dd></div>
-        <div><dt>Limits</dt><dd>Obfuscation and dynamic payloads can evade the static scan. Its manifest-only extractor reads a subset of the full Drebin feature vocabulary.</dd></div>
-      </dl>
-      <a class="text-link" href={featured.url}>Read the code &amp; report <span aria-hidden="true">↗</span></a>
+      <p class="result-summary"><strong>98.7% held-out dataset accuracy.</strong> Full Drebin-215 benchmark; the manifest-only scanner reads fewer signals, so its results can differ.</p>
+      <a class="text-link" href={featured.url}>Read the code &amp; report <span aria-hidden="true"><Icon name="external" /></span></a>
       <ul class="technologies" aria-label="Android project technologies">{featured.tags.map(t=><li>{t}</li>)}</ul>
     </div>
     <div class="case-evidence">
       <figure class="analysis-figure">
         <figcaption><span class="eyebrow">Inside the scanner</span><span class="figure-note">Static · no execution</span></figcaption>
         <div class="apk-input"><span class="serif">APK</span><p>Manifest permissions<br />and intent actions</p></div>
-        <div class="flow-connector" aria-hidden="true">↓</div>
+        <div class="flow-connector" aria-hidden="true"><Icon name="down" /></div>
         <div class="feature-vector"><strong>215</strong><div><b>Drebin feature vocabulary</b><p>Manifest signals mapped<br />into a binary vector.</p></div></div>
-        <div class="flow-connector" aria-hidden="true">↓</div>
+        <div class="flow-connector" aria-hidden="true"><Icon name="down" /></div>
         <div class="classifier"><span class="serif">Random Forest</span><p>200 trees · interpretable importances</p></div>
         <div class="verdict-line"><span>Classification</span><span>Confidence</span><span>Risk flags</span></div>
         <p class="figure-caption">The data path implemented by the public scanner. The package stays unexecuted throughout.</p>
       </figure>
-      <p class="result-summary"><strong>98.7% held-out dataset accuracy.</strong> Full Drebin-215 benchmark; the manifest-only scanner reads fewer signals, so its results can differ.</p>
+    </div>
+    <div class="case-method">
+      <dl class="case-facts">
+        <div><dt>Implementation</dt><dd>A Python CLI scanner and Flask interface. Androguard extracts manifest permissions and intent actions; a Random Forest returns a classification, confidence, and high-risk permission flags.</dd></div>
+        <div><dt>Approach</dt><dd>Five classifiers compared on the same split. A 200-tree Random Forest was retained for its interpretable feature importances.</dd></div>
+        <div><dt>Limits</dt><dd>Obfuscation and dynamic payloads can evade the static scan. Its manifest-only extractor reads a subset of the full Drebin feature vocabulary.</dd></div>
+      </dl>
       <details class="evaluation">
         <summary>Inspect the evaluation <span aria-hidden="true">+</span></summary>
         <p><strong>98.7% accuracy</strong> on the full Drebin-215 dataset’s 20% held-out split. The report gives 98.74%; the documented fixed-seed re-run gives 98.77%.</p>
@@ -39,13 +42,13 @@ const [forti,soc] = secondary;
     </div>
   </article>
   <article class="case-network" id="p-forti" aria-labelledby="forti-title">
-    <div class="network-intro"><p class="eyebrow">FortiGate VPN &amp; HA Lab</p><h3 id="forti-title">Two sites.<br /><em>One secure link.</em></h3><p>{forti.description}</p><a class="text-link" href={forti.url}>Explore the FortiGate lab <span aria-hidden="true">↗</span></a></div>
-    <div class="network-evidence"><figure class="network-diagram"><figcaption class="eyebrow">FortiGate VPN &amp; high availability</figcaption><div class="network-topology"><div class="network-site"><span class="figure-note">Headquarters</span><strong>Active</strong><span class="ha-link">↕ HA heartbeat</span><strong class="passive">Passive</strong></div><div class="network-tunnel"><span>IKEv2 / IPsec</span><i aria-hidden="true"></i><small>ESP on the WAN</small></div><div class="network-site remote"><span class="figure-note">Branch</span><strong>FortiGate</strong><span class="figure-note">Dynamic address</span></div></div><p class="figure-caption">EVE-NG · Active-passive pair at headquarters with an encrypted tunnel to the branch.</p></figure>
+    <div class="network-intro"><h3 id="forti-title">FortiGate VPN<br /> &amp; HA Lab.</h3><p>{forti.description}</p><a class="text-link" href={forti.url}>Explore the FortiGate lab <span aria-hidden="true"><Icon name="external" /></span></a></div>
+    <div class="network-evidence"><figure class="network-diagram"><figcaption class="eyebrow">FortiGate VPN &amp; high availability</figcaption><div class="network-topology"><div class="network-site"><span class="figure-note">Headquarters</span><strong>Active</strong><span class="ha-link">HA heartbeat</span><strong class="passive">Passive</strong></div><div class="network-tunnel"><span>IKEv2 / IPsec</span><i aria-hidden="true"></i><small>ESP on the WAN</small></div><div class="network-site remote"><span class="figure-note">Branch</span><strong>FortiGate</strong><span class="figure-note">Dynamic address</span></div></div><p class="figure-caption">EVE-NG · Active-passive pair at headquarters with an encrypted tunnel to the branch.</p></figure>
     <div class="network-outcomes"><div><h4>Validated</h4><p>Bidirectional traffic, interactive RDP, ESP packet captures, and traffic recovery after HA failover.</p></div><div><h4>Investigated</h4><p>A return-path routing issue, plus documented production-hardening gaps.</p></div></div>
     <details class="evaluation"><summary>Read the validation log <span aria-hidden="true">+</span></summary><dl class="checks">{forti.table?.rows.map(([k,v])=><div><dt>{k}</dt><dd>{v}</dd></div>)}</dl></details></div>
   </article>
   <div class="supporting-work">
-    <article class="case-soc" id="p-soc" aria-labelledby="soc-title"><p class="eyebrow">SecureBank SOC Lab · Team project</p><h3 id="soc-title">From server logs<br /> to useful signals.</h3><p>{soc.description}</p><figure class="soc-flow"><figcaption class="sr-only">SOC data flow</figcaption><span>Web logs</span><span aria-hidden="true">→</span><span>Wazuh</span><span aria-hidden="true">→</span><span>Elastic / Kibana</span></figure><p class="contribution"><strong>My contribution.</strong> Helper scripts for service health, investigation, and recovery checks.</p><p class="case-limit">A virtual SOC lab; production detection coverage and response metrics have not been established.</p><a class="text-link" href={soc.url}>Read the SecureBank SOC Lab <span aria-hidden="true">↗</span></a></article>
-    <article class="case-linux" id="p-rice" aria-labelledby="rice-title"><p class="eyebrow">MyHyprlandRice · Linux</p><h3 id="rice-title">A desktop,<br /><em>made repeatable.</em></h3><p>{compact.description}</p><dl class="state-diagram"><div><dt>dotfiles/</dt><dd>Declarative configuration</dd></div><div><dt>defaults/</dt><dd>First-run mutable state</dd></div><div><dt>Recovery tooling</dt><dd>Reversible changes</dd></div></dl><p class="case-limit">A personal Linux setup with host-specific configuration requirements.</p><a class="text-link" href={compact.url}>Explore MyHyprlandRice <span aria-hidden="true">↗</span></a></article>
+    <article class="case-soc" id="p-soc" aria-labelledby="soc-title"><p class="case-category">Detection &amp; monitoring · Team project</p><h3 id="soc-title">SecureBank<br /> SOC Lab.</h3><p>{soc.description}</p><figure class="soc-flow"><figcaption class="sr-only">SOC data flow</figcaption><span>Web logs</span><span aria-hidden="true"><Icon name="arrow" /></span><span>Wazuh</span><span aria-hidden="true"><Icon name="arrow" /></span><span>Elastic / Kibana</span></figure><p class="contribution"><strong>My contribution.</strong> Helper scripts for service health, investigation, and recovery checks.</p><p class="case-limit">A virtual SOC lab; production detection coverage and response metrics have not been established.</p><a class="text-link" href={soc.url}>Read the SecureBank SOC Lab <span aria-hidden="true"><Icon name="external" /></span></a></article>
+    <article class="case-linux" id="p-rice" aria-labelledby="rice-title"><p class="case-category">Linux systems engineering</p><h3 id="rice-title">MyHyprlandRice.</h3><p>{compact.description}</p><dl class="state-diagram"><div><dt>dotfiles/</dt><dd>Declarative configuration</dd></div><div><dt>defaults/</dt><dd>First-run mutable state</dd></div><div><dt>Recovery tooling</dt><dd>Reversible changes</dd></div></dl><p class="case-limit">A personal Linux setup with host-specific configuration requirements.</p><a class="text-link" href={compact.url}>Explore MyHyprlandRice <span aria-hidden="true"><Icon name="external" /></span></a></article>
   </div>
 </section>

@@ -8,7 +8,7 @@ A static Astro portfolio about reverse engineering, malware analysis, and securi
 
 ## Design and stack
 
-Astro 7, strict TypeScript, semantic HTML, custom responsive CSS, and GitHub Pages. Source Serif 4 gives headings their editorial character; Geist handles prose and controls; Geist Mono distinguishes instructions, addresses, and technical metadata. All fonts are self-hosted. Paper, ink, and brick-red accents connect the homepage's annotated figures, project explanations, and competition log. See [DESIGN.md](DESIGN.md) for tokens, interaction behavior, and design references.
+Astro 7, strict TypeScript, semantic HTML, custom responsive CSS, and GitHub Pages. Source Serif 4 gives headings their editorial character; Geist handles prose and controls; Geist Mono distinguishes instructions, addresses, and technical metadata. All fonts are self-hosted. Graphite, ivory, and mineral-blue accents connect the homepage's annotated figures, project explanations, and competition log. See [DESIGN.md](DESIGN.md) for tokens, interaction behavior, and design references.
 
 Pages are rendered to static HTML. Small inline scripts enhance navigation state and the selectable binary exhibit. There are no client framework bundles, runtime API calls, analytics, or third-party embeds. The exhibit's instructions and explanations remain available without JavaScript.
 

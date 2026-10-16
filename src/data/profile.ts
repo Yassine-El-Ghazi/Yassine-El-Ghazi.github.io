@@ -7,7 +7,7 @@ export const profile = {
   ctftime: 'https://ctftime.org/user/213391',
   email: 'yassine.elghazi@eidia.ueuromed.org',
   description:
-    'Cybersecurity engineering student at UEMF focused on reverse engineering and malware analysis, with practical work in static APK analysis, network security, detection engineering, and CTFs.',
+    'Cybersecurity engineering student at UEMF exploring reverse engineering and malware analysis through static APK analysis, security labs, and CTFs.',
 };
 
 // Each tool is cross-referenced to the public project (or the CTF log) where it is used, as recorded in that
